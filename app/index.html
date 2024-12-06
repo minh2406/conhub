@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="styles.css">
+	<link rel="stylesheet" href="responsive.css">
+</head>
+
+<body onload="loadContent()">
+	<script type="text/javascript" src="responsive.js"></script>
+	<script type="text/javascript" src="main.js"></script>
+	<script type="text/javascript" src="test.js"></script>
+    <header>
+		<ul class ="nav">
+			<li><a href="index.html">Trang chủ</a></li>
+			<li><a href="#about">Thông tin</a></li>
+			<li class="dropbox">
+				<a href="#">Năm phát hành</a>
+				<ul class="dropdown">
+					<div class="dropdown-row"> 
+						<li><a href="yearFilter.html#2016">2016</a></li>
+						<li><a href="yearFilter.html#2017">2017</a></li>
+						<li><a href="yearFilter.html#2018">2018</a></li>
+					</div>
+					<div class="dropdown-row"> 
+						<li><a href="yearFilter.html#2019">2019</a></li>
+						<li><a href="yearFilter.html#2020">2020</a></li>
+						<li><a href="yearFilter.html#2021">2021</a></li>
+					</div>
+					<div class="dropdown-row"> 
+						<li><a href="yearFilter.html#2022">2022</a></li>
+						<li><a href="yearFilter.html#2023">2023</a></li>
+						<li><a href="yearFilter.html#2024">2024</a></li>
+					</div>
+				</ul>
+			</li>
+		</ul>
+		<img src="./conluong.jfif" class="banner">
+    </header>
+    <main>
+		<!--main content-->
+		<section class="main-content" id="main-content">
+			<h1 class="title">Con moi</h1>
+				<span class="content">
+					<a class="img-container" href="test1.html#1"><img src="https://i.ytimg.com/vi/C7OQHIpDlvA/maxresdefault.jpg" class="content-img"></a>
+					<a class="name" href="test1.html#1">The Wait</a>
+				</span>
+				<span class="content">
+					<a class="img-container" href="test1.html#2"><img src="https://i.ytimg.com/vi/OrOYvVf6tIM/maxresdefault.jpg" class="content-img"></a>
+					<a class="name" href="test1.html#2">Other Side of the Box</a>
+				</span>
+				<span class="content">
+					<a class="img-container" href="test1.html#3"><img src="https://i.ytimg.com/vi/mhazCS14Tas/maxresdefault.jpg" class="content-img"></a>
+					<a class="name" href="test1.html#3">THE CHAIR</a>
+				</span>
+				<span class="content">
+					<a class="img-container" href="test1.html#4"><img src="https://i.ytimg.com/vi/BI9fKfX5V68/maxresdefault.jpg" class="content-img"></a>
+					<a class="name" href="test1.html#4">Portrait of God</a>
+				</span>
+				<span class="content">
+					<a class="img-container" href="test1.html#5"><img src="https://i.ytimg.com/vi/IyhoT3smJEQ/maxresdefault.jpg" class="content-img"></a>
+					<a class="name" href="test1.html#5">The Kid and the Camera</a>
+				</span>
+				<span class="content">
+					<a class="img-container" href="test1.html#6"><img src="https://i.ytimg.com/vi/thpF81-wrMs/maxresdefault.jpg" class="content-img"></a>
+					<a class="name" href="test1.html#6">The Loop</a>
+				</span>
+				<!--button-->
+			<div class="button-container">
+					<button class="previousButton" id="previousButton" onclick = "previousContent()">Trước</button>
+					<button class="nextButton" id="nextButton" onclick = "nextContent()">Sau</button>
+				</div>
+		</section>
+		<!--sub content-->
+		<section class="sub-content" id="sub-content"><h1 class="title">Con hot</h1>
+			<span class="content">
+				<a class="img-container" href="test1.html#1"><img src="https://i.ytimg.com/vi/C7OQHIpDlvA/maxresdefault.jpg" class="content-img"></a>
+				<span class="details">
+					<a class="name" href="test1.html#1">The Wait</a>
+					<p class="description">"The Wait" (Written &amp; Directed by Nolt Vutthisak) tells the story of a lonely drummer (Kritthee Visitkitjakarn) during the self-distancing period in 2020, who has grown frustrated with the absence of his band. Killing time, the self-taught drummer must do something by his own imagination.</p>
+				</span>
+			</span>
+				<span class="content">
+				<a class="img-container" href="test1.html#2"><img src="https://i.ytimg.com/vi/OrOYvVf6tIM/maxresdefault.jpg" class="content-img"></a>
+				<span class="details">
+					<a class="name" href="test1.html#2">Other Side of the Box</a>
+					<p class="description">More About "Other Side of the Box" : 
+			On a normal Winter night Ben and Rachel are called upon by their estranged friend Shawn, who has brought a gift. Things quickly escalate when they open the box and realize something is trying to get out.</p>
+				</span>
+			</span>
+				<span class="content">
+				<a class="img-container" href="test1.html#3"><img src="https://i.ytimg.com/vi/mhazCS14Tas/maxresdefault.jpg" class="content-img"></a>
+				<span class="details">
+					<a class="name" href="test1.html#3">THE CHAIR</a>
+					<p class="description">After Reese (Anthony Pavone) brings home an antique chair, a series of horrific events follow, leading him to question if it's a malevolent spirit the chair possesses or the darkness inside his own mind.</p>
+				</span>
+			</span>
+				<span class="content">
+				<a class="img-container" href="test1.html#4"><img src="https://i.ytimg.com/vi/BI9fKfX5V68/maxresdefault.jpg" class="content-img"></a>
+				<span class="details">
+					<a class="name" href="test1.html#4">Portrait of God</a>
+					<p class="description">A religious girl prepares a presentation about a painting titled "Portrait of God". What she sees challenges her beliefs.</p>
+				</span>
+			</span>
+				<span class="content">
+				<a class="img-container" href="test1.html#5"><img src="https://i.ytimg.com/vi/IyhoT3smJEQ/maxresdefault.jpg" class="content-img"></a>
+				<span class="details">
+					<a class="name" href="test1.html#5">The Kid and the Camera</a>
+					<p class="description">MA young boy named Cailen with a broken camera is visited by a sleep fairy called the Cipsneed, but he's never heard of a sleep fairy. Enjoy!</p>
+				</span>
+			</span>
+		</section>
+    </main>
+    <footer>
+		<div class="about" id="about">
+			<p>Conluong - 2024</p>
+		</div>
+		<div class="contact">
+			<p>Contact: <a href="#">Conluong@gmail.com</a></p>
+		</div>
+    </footer>
+</body>
+
+</html>
