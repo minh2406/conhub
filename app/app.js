@@ -56,9 +56,9 @@ app.get('/year', function(req, res){
 });
 
 app.listen(port);
-
+console.log("web is running");
 //mysql
-const mysql = require('mysql2');
+/*const mysql = require('mysql2');
 const connection = mysql.createConnection({
   host: 'localhost',
   port: 3306,
@@ -68,4 +68,7 @@ const connection = mysql.createConnection({
 });
 connection.query(
   'SELECT * FROM films',
-);
+  (err,results,fields) => {
+
+  }
+);*/
