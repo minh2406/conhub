@@ -74,14 +74,21 @@ connection.query(
   }
 );
 */
+//dotenv
+require('dotenv').config();
 //postgreSQL
+const User = process.env.PG_User;
+const Password = process.env.PG_Password;
+const Database =  process.env.PG_Database;
+const Host = process.env.PG_Host;
+const Port = process.env.PG_Port;
 const {Client} = require('pg');
 const client = new Client({
-  host: 'localhost',
-  user: 'postgres',
-  port: 8000,
-  password: 'minhphudeptrai',
-  database: 'postgres'
+  host: Host,
+  user: User,
+  port: Port,
+  password: Password,
+  database: Database
 })
 
 client.connect();
