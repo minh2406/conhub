@@ -94,7 +94,7 @@ const client = new Client({
 
 client.connect();
 
-client.query('Select * from test', (err, res)=>{
+client.query('Select * from films', (err, res)=>{
     if(!err){
       console.log(res.rows);
     }
