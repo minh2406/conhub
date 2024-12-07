@@ -57,8 +57,9 @@ app.get('/year', function(req, res){
 
 app.listen(port);
 console.log("web is running");
+/*
 //mysql
-/*const mysql = require('mysql2');
+const mysql = require('mysql2');
 const connection = mysql.createConnection({
   host: 'localhost',
   port: 3306,
@@ -71,4 +72,26 @@ connection.query(
   (err,results,fields) => {
 
   }
-);*/
+);
+*/
+//postgreSQL
+const {Client} = require('pg');
+const client = new Client({
+  host: 'localhost',
+  user: 'postgres',
+  port: 8000,
+  password: 'minhphudeptrai',
+  database: 'postgres'
+})
+
+client.connect();
+
+client.query('Select * from test', (err, res)=>{
+    if(!err){
+      console.log(res.rows);
+    }
+    else {
+      console.log(err.message);
+    }
+    client.end;
+});
