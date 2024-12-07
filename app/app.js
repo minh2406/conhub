@@ -88,7 +88,8 @@ const client = new Client({
   user: User,
   port: Port,
   password: Password,
-  database: Database
+  database: Database,
+  ssl: true
 })
 
 client.connect();
