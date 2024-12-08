@@ -24,34 +24,6 @@ var port = 8080;
 
 app.set('views', __dirname + '/views');
 app.use(express.static(__dirname + '/views'));
-
-
-app.get('/', function(req, res){
-  res.render('index.ejs', {
-        title: 'My Site'
-  });
-});
-
-app.get('/home', function(req, res){
-  res.render('index.ejs', {
-        title: 'My Site'
-  });
-});
-app.get('/watch/*', function(req, res){
-  res.render('viewFilm.ejs', {
-    title: '',
-    url: req.originalUrl
-  });
-});
-app.get('/year/(*)', function(req, res){
-  res.render('yearFilter.ejs', {
-    title: 'Contact',
-    url: req.originalUrl
-  });
-});
-
-app.listen(port);
-console.log("web is running");
 /*
 //mysql
 const mysql = require('mysql2');
@@ -88,10 +60,38 @@ const client = new Client({
 })
 
 client.connect();
-
 client.query('Select * from films', (err, res)=>{
     if(!err){
-      console.log(res.rows);
+      let fetchData = res.rows;
+      app.get('/', function(req, res){
+        res.render('index.ejs', {
+              title: 'My Site',
+              dbData: fetchData,
+        });
+      });
+      console.log(fetchData);
+      app.get('/home', function(req, res){
+        res.render('index.ejs', {
+              title: 'My Site',
+              dbData: fetchData,
+        });
+      });
+      app.get('/watch/*', function(req, res){
+        res.render('viewFilm.ejs', {
+          title: '',
+          url: req.originalUrl
+        });
+      });
+      app.get('/year/(*)', function(req, res){
+        res.render('yearFilter.ejs', {
+          title: 'Contact',
+          url: req.originalUrl,
+          dbData: fetchData,
+        });
+      });
+      
+      app.listen(port);
+      console.log("web is running");
     }
     else {
       console.log(err.message);

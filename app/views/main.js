@@ -117,11 +117,7 @@ var mainContentList = [
 	contentList[3],
 ];
 var subContentList = [
-	contentList[0],
-	contentList[1],
-	contentList[2],
-	contentList[3],
-	contentList[4],
+	
 ];
 function loadContent() {
 	/*reset*/
@@ -147,13 +143,20 @@ function loadMainContent(){
 		let contentImg = contentContainer[i-mainContentIndex].getElementsByClassName("content-img");
 		let contentName = contentContainer[i-mainContentIndex].getElementsByClassName("name");
 		contentContainer[i-mainContentIndex].style.display = "inline-block";
-		imgContainer[0].href = mainContentList[i].href;
+		imgContainer[0].href = `/watch/${mainContentList[i].id}`;
 		contentImg[0].src = mainContentList[i].img;
-		contentName[0].href = mainContentList[i].href;
+		contentName[0].href = `/watch/${mainContentList[i].id}`;
 		contentName[0].innerText = mainContentList[i].name;
 	}
 }
 function loadSubContent(){
+	subContentList = [
+		contentList[3],
+		contentList[2],
+		contentList[1],
+		contentList[4],
+		contentList[0],
+	];
 	let subContent = document.getElementById("sub-content");
 	let i = 0;
 	if(subContent)
@@ -165,28 +168,34 @@ function loadSubContent(){
 			let contentName = contentContainer[i].getElementsByClassName("name");
 			let author = contentContainer[i].getElementsByClassName("description");
 			contentContainer[i].style.display = "block";
-			imgContainer[0].href = content.href;
+			imgContainer[0].href = `/watch/${subContentList[i].id}`;
 			contentImg[0].src = content.img;
-			contentName[0].href = content.href;
+			contentName[0].href = `/watch/${subContentList[i].id}`;
 			contentName[0].innerText = content.name;
 			author[0].innerText = content.author;
 			i++;
 		}
 	}
 }
-function mainPageContentLoad()
+function mainPageContentLoad(dbData)
 {
-	mainContentList = [];
-	for (var content of contentList)
-	{
-		mainContentList.push(content);
-	}
-	if(maxMainContentLength > mainContentList.length)
-	{
-		mainContentShow = mainContentList.length;
-	}
+	contentList = sortData(JSON.parse(dbData));
+	mainContentList = contentList;
 	loadContent();
 	return;
+}
+function sortData(data)
+{
+	let tempData = data;
+	for (let i = 0; i < tempData.length; i++){
+		for (let j = i + 1; j < tempData.length; j++){
+			if(tempData[i].id < tempData[j].id)
+			{
+				[tempData[i], tempData[j]] = [tempData[j], tempData[i]]
+			}
+		}
+	}
+	return tempData;
 }
 function nextContent(){
 	if(mainContentShow + maxMainContentLength < mainContentList.length)
@@ -195,7 +204,7 @@ function nextContent(){
 		mainContentIndex = mainContentShow - maxMainContentLength;
 		loadContent();
 	}
-	else if(mainContentIndex + maxMainContentLength < mainContentList.length-1)
+	else if(mainContentIndex + maxMainContentLength < mainContentList.length)
 	{
 		mainContentShow = mainContentList.length;
 		mainContentIndex += maxMainContentLength;
@@ -229,7 +238,8 @@ function loadTitle(text){
 	let title = mainContent.getElementsByClassName("title");
 	title[0].innerText = text;
 }
-function yearFilmContent(url){
+function yearFilmContent(url, dbData){
+	contentList = sortData(JSON.parse(dbData));
 	let year = url.split('year/')[1];
 	mainContentList = [];
 	for (var content of contentList)
@@ -246,9 +256,4 @@ function yearFilmContent(url){
 	loadTitle(`Phim năm ${year}`);
 	loadContent();
 	return;
-}
-function reload()
-{
-	location.reload();
-	console.log("a");
 }

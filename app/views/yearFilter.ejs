@@ -7,7 +7,7 @@
 	<link rel="stylesheet" href="/styles.css">
 </head>
 
-<body onload="yearFilmContent('<%= url %>')">
+<body onload="yearFilmContent('<%= url %>', `<%=JSON.stringify(dbData)%>`)">
 	<script type="text/javascript" src="/responsive.js"></script>
 	<script type="text/javascript" src="/main.js"></script>
     <header>
