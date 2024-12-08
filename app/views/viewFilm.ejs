@@ -4,10 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title><%= title %></title>
 	<link rel="stylesheet" href="/styles.css">
 </head>
 
-<body onload="loadFilm('<%= url %>')">
+<body onload="loadFilm('<%= url %>', `<%=JSON.stringify(dbData)%>`)">
 	<script type="text/javascript" src="/responsive.js"></script>
 	<script type="text/javascript" src="/main.js"></script>
     <header>
@@ -32,6 +33,11 @@
 						<li><a href="/year/2023">2023</a></li>
 						<li><a href="/year/2024">2024</a></li>
 					</div>
+				</ul>
+			</li>
+			<li class="search">
+				<input type="text" id ="search" placeholder="Tìm tên phim" class="search-box" onkeyup="search()" onfocus="searchOn()" onfocusout="searchOff()" autocomplete="off">
+				<ul id = "search-container">
 				</ul>
 			</li>
 		</ul>

@@ -79,6 +79,31 @@ header ul a{
 .dropbox:hover .dropdown{
 	display: block;
 }
+/*search*/
+.search{
+	float: right;
+}
+.search ul {
+	width: inherit;
+	max-height: 192px;
+	position: absolute;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+.search ul li {
+	display: none;
+	background-color: #333333;
+	height: auto;
+	padding: 10px;
+	width: 200px;
+}
+.search-box{
+	width: 200px;
+	margin: 5px;
+	padding: 5px;
+	margin-bottom: 7px;
+	color: black;
+}
 /*banner*/
 .banner {
 	width: 100%;

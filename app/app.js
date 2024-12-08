@@ -65,26 +65,27 @@ client.query('Select * from films', (err, res)=>{
       let fetchData = res.rows;
       app.get('/', function(req, res){
         res.render('index.ejs', {
-              title: 'My Site',
+              title: 'Trang chủ - Con hub',
               dbData: fetchData,
         });
       });
       console.log(fetchData);
       app.get('/home', function(req, res){
         res.render('index.ejs', {
-              title: 'My Site',
+              title: 'Trang chủ - Con hub',
               dbData: fetchData,
         });
       });
       app.get('/watch/*', function(req, res){
         res.render('viewFilm.ejs', {
-          title: '',
-          url: req.originalUrl
+          title: 'Xem phim - Con hub',
+          url: req.originalUrl,
+          dbData: fetchData,
         });
       });
       app.get('/year/(*)', function(req, res){
         res.render('yearFilter.ejs', {
-          title: 'Contact',
+          title: 'Năm phát hành - Con hub',
           url: req.originalUrl,
           dbData: fetchData,
         });

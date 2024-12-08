@@ -126,6 +126,8 @@ function loadContent() {
 	loadMainContent();
 	/*load sub content*/
 	loadSubContent();
+	/*load search content*/
+	loadSearchContent();
 }
 function clearContent()
 {
@@ -225,7 +227,9 @@ function previousContent(){
 		loadContent();
 	}
 }
-function loadFilm(url){
+function loadFilm(url, dbData){
+	contentList = sortData(JSON.parse(dbData));
+	loadSearchContent();
 	let video = document.getElementById("video");
 	let details = document.getElementById("details");
 	let filmId = url.split('watch/')[1];
@@ -256,4 +260,42 @@ function yearFilmContent(url, dbData){
 	loadTitle(`Phim năm ${year}`);
 	loadContent();
 	return;
+}
+function loadSearchContent()
+{
+	let searchContainer = document.getElementById("search-container");
+	for (var content of contentList)
+	{
+		searchContainer.innerHTML += `<li  class="search-content">
+						<a href="/watch/${content.id}">${content.name}</a>
+						</li>`
+	}
+}
+function search()
+{
+	var input, filter, a, txtValue, searchContentList;
+    input = document.getElementById("search");
+    filter = input.value.toUpperCase();
+    searchContentList = document.getElementsByClassName("search-content");
+    for (let i = 0; i < searchContentList.length; i++) {
+        a = searchContentList[i].getElementsByTagName("a")[0];
+        txtValue = a.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            searchContentList[i].style.display = "block";
+        } else {
+            searchContentList[i].style.display = "none";
+        }
+    }
+}
+function searchOn(){
+	var searchContentList = document.getElementsByClassName("search-content");
+	for (let i = 0; i < searchContentList.length; i++) {
+        searchContentList[i].style.display = "block";
+    }
+}
+function searchOff(){
+	var searchContentList = document.getElementsByClassName("search-content");
+	for (let i = 0; i < searchContentList.length; i++) {
+        searchContentList[i].style.display = "none";
+    }
 }
