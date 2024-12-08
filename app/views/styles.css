@@ -95,7 +95,7 @@ main {
 	/*border: 3px outset #2d2d2d;
 	border-radius: 3px;*/
 	padding: 0 auto;
-	display: inline-block;
+	display: block;
 	float: left;
 	margin: 20px auto;
 	max-width: 900px;
@@ -152,7 +152,7 @@ main {
 .sub-content {
 	/*border: 3px outset #2d2d2d;
 	border-radius: 3px;*/
-	display: inline-block;
+	display: block;
 	float: right;
 	margin: 20px auto;
 }

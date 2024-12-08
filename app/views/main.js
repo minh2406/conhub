@@ -7,7 +7,7 @@ var contentList = [
 		{
 			img: 'https://i.ytimg.com/vi/C7OQHIpDlvA/maxresdefault.jpg',
 			name: 'The Wait',
-			href: '/watch#1',
+			href: '/watch/1',
 			description: `"The Wait" (Written & Directed by Nolt Vutthisak) tells the story of a lonely drummer (Kritthee Visitkitjakarn) during the self-distancing period in 2020, who has grown frustrated with the absence of his band. Killing time, the self-taught drummer must do something by his own imagination.`,
 			src: 'https://www.youtube.com/embed/C7OQHIpDlvA?si=DCA_qpwjCrA8kuhk',
 			author: `Nolt Vutthisak`,
@@ -16,7 +16,7 @@ var contentList = [
 		{
 			img: 'https://i.ytimg.com/vi/OrOYvVf6tIM/maxresdefault.jpg',
 			name: 'Other Side of the Box',
-			href: '/watch#2',
+			href: '/watch/2',
 			description: `More About "Other Side of the Box" : 
 			On a normal Winter night Ben and Rachel are called upon by their estranged friend Shawn, who has brought a gift. Things quickly escalate when they open the box and realize something is trying to get out.`,
 			src: 'https://www.youtube.com/embed/OrOYvVf6tIM?si=DCA_qpwjCrA8kuhk',
@@ -26,7 +26,7 @@ var contentList = [
 		{
 			img: 'https://i.ytimg.com/vi/mhazCS14Tas/maxresdefault.jpg',
 			name: 'THE CHAIR',
-			href: '/watch#3',
+			href: '/watch/3',
 			description: `After Reese (Anthony Pavone) brings home an antique chair, a series of horrific events follow, leading him to question if it's a malevolent spirit the chair possesses or the darkness inside his own mind.`,
 			src: 'https://www.youtube.com/embed/mhazCS14Tas?si=DCA_qpwjCrA8kuhk',
 			author: `Curry Barker`,
@@ -35,7 +35,7 @@ var contentList = [
 		{
 			img: 'https://i.ytimg.com/vi/BI9fKfX5V68/maxresdefault.jpg',
 			name: 'Portrait of God',
-			href: '/watch#4',
+			href: '/watch/4',
 			description: `A religious girl prepares a presentation about a painting titled "Portrait of God". What she sees challenges her beliefs.`,
 			src: 'https://www.youtube.com/embed/BI9fKfX5V68?si=DCA_qpwjCrA8kuhk',
 			author: `Dylan Clark`,
@@ -44,7 +44,7 @@ var contentList = [
 		{
 			img: 'https://i.ytimg.com/vi/IyhoT3smJEQ/maxresdefault.jpg',
 			name: 'The Kid and the Camera',
-			href: '/watch#5',
+			href: '/watch/5',
 			description: `MA young boy named Cailen with a broken camera is visited by a sleep fairy called the Cipsneed, but he's never heard of a sleep fairy. Enjoy!`,
 			src: 'https://www.youtube.com/embed/IyhoT3smJEQ?si=DCA_qpwjCrA8kuhk',
 			author: `Braiden Ortiz`,
@@ -53,7 +53,7 @@ var contentList = [
 		{
 			img: 'https://i.ytimg.com/vi/thpF81-wrMs/maxresdefault.jpg',
 			name: 'The Loop',
-			href: '/watch#6',
+			href: '/watch/6',
 			description: ``,
 			src: 'https://www.youtube.com/embed/thpF81-wrMs?si=DCA_qpwjCrA8kuhk',
 			author: `Sadiel Gomez`,
@@ -63,7 +63,7 @@ var contentList = [
 		{
 			img: 'https://i.ytimg.com/vi/C7OQHIpDlvA/maxresdefault.jpg',
 			name: 'The Wait',
-			href: '/watch#1',
+			href: '/watch/1',
 			description: `"The Wait" (Written & Directed by Nolt Vutthisak) tells the story of a lonely drummer (Kritthee Visitkitjakarn) during the self-distancing period in 2020, who has grown frustrated with the absence of his band. Killing time, the self-taught drummer must do something by his own imagination.`,
 			src: 'https://www.youtube.com/embed/C7OQHIpDlvA?si=DCA_qpwjCrA8kuhk',
 			author: `Nolt Vutthisak`,
@@ -72,7 +72,7 @@ var contentList = [
 		{
 			img: 'https://i.ytimg.com/vi/C7OQHIpDlvA/maxresdefault.jpg',
 			name: 'The Wait',
-			href: '/watch#1',
+			href: '/watch/1',
 			description: `"The Wait" (Written & Directed by Nolt Vutthisak) tells the story of a lonely drummer (Kritthee Visitkitjakarn) during the self-distancing period in 2020, who has grown frustrated with the absence of his band. Killing time, the self-taught drummer must do something by his own imagination.`,
 			src: 'https://www.youtube.com/embed/C7OQHIpDlvA?si=DCA_qpwjCrA8kuhk',
 			author: `Nolt Vutthisak`,
@@ -81,7 +81,7 @@ var contentList = [
 		{
 			img: 'https://i.ytimg.com/vi/C7OQHIpDlvA/maxresdefault.jpg',
 			name: 'The Wait',
-			href: '/watch#1',
+			href: '/watch/1',
 			description: `"The Wait" (Written & Directed by Nolt Vutthisak) tells the story of a lonely drummer (Kritthee Visitkitjakarn) during the self-distancing period in 2020, who has grown frustrated with the absence of his band. Killing time, the self-taught drummer must do something by his own imagination.`,
 			src: 'https://www.youtube.com/embed/C7OQHIpDlvA?si=DCA_qpwjCrA8kuhk',
 			author: `Nolt Vutthisak`,
@@ -90,7 +90,7 @@ var contentList = [
 		{
 			img: 'https://i.ytimg.com/vi/C7OQHIpDlvA/maxresdefault.jpg',
 			name: 'The Wait',
-			href: '/watch#1',
+			href: '/watch/1',
 			description: `"The Wait" (Written & Directed by Nolt Vutthisak) tells the story of a lonely drummer (Kritthee Visitkitjakarn) during the self-distancing period in 2020, who has grown frustrated with the absence of his band. Killing time, the self-taught drummer must do something by his own imagination.`,
 			src: 'https://www.youtube.com/embed/C7OQHIpDlvA?si=DCA_qpwjCrA8kuhk',
 			author: `Nolt Vutthisak`,
@@ -99,7 +99,7 @@ var contentList = [
 		{
 			img: 'https://i.ytimg.com/vi/C7OQHIpDlvA/maxresdefault.jpg',
 			name: 'The Wait',
-			href: '/watch#1',
+			href: '/watch/1',
 			description: `"The Wait" (Written & Directed by Nolt Vutthisak) tells the story of a lonely drummer (Kritthee Visitkitjakarn) during the self-distancing period in 2020, who has grown frustrated with the absence of his band. Killing time, the self-taught drummer must do something by his own imagination.`,
 			src: 'https://www.youtube.com/embed/C7OQHIpDlvA?si=DCA_qpwjCrA8kuhk',
 			author: `Nolt Vutthisak`,
@@ -216,10 +216,10 @@ function previousContent(){
 		loadContent();
 	}
 }
-function loadFilm(){
+function loadFilm(url){
 	let video = document.getElementById("video");
 	let details = document.getElementById("details");
-	let filmId = window.location.href.split('#')[1];
+	let filmId = url.split('watch/')[1];
 	video.src = contentList[filmId - 1].src;
 	details.innerHTML = `<h1 class="name">${contentList[filmId - 1].name}</h1>
 			<p class="description">${contentList[filmId - 1].description}</p>`;
@@ -229,8 +229,8 @@ function loadTitle(text){
 	let title = mainContent.getElementsByClassName("title");
 	title[0].innerText = text;
 }
-function yearFilmContent(){
-	let year = window.location.href.split('#')[1];
+function yearFilmContent(url){
+	let year = url.split('year/')[1];
 	mainContentList = [];
 	for (var content of contentList)
 	{

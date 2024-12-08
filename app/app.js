@@ -23,35 +23,30 @@ var app = express();
 var port = 8080;
 
 app.set('views', __dirname + '/views');
-//app.use(express.static('public'));
 app.use(express.static(__dirname + '/views'));
 
 
 app.get('/', function(req, res){
   res.render('index.ejs', {
-        title: 'My Site',
-    nav: ['Home','About','Contact'] 
+        title: 'My Site'
   });
 });
 
 app.get('/home', function(req, res){
   res.render('index.ejs', {
-        title: 'My Site',
-    nav: ['Home','About','Contact'] 
+        title: 'My Site'
   });
 });
-
-app.get('/watch', function(req, res){
+app.get('/watch/*', function(req, res){
   res.render('viewFilm.ejs', {
-    title: 'About',
-     nav: ['Home','About','Contact']
+    title: '',
+    url: req.originalUrl
   });
 });
-
-app.get('/year', function(req, res){
+app.get('/year/(*)', function(req, res){
   res.render('yearFilter.ejs', {
     title: 'Contact',
-     nav: ['Home','About','Contact']
+    url: req.originalUrl
   });
 });
 

@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="styles.css">
+	<link rel="stylesheet" href="/styles.css">
 </head>
 
-<body onload="yearFilmContent()">
-	<script type="text/javascript" src="responsive.js"></script>
-	<script type="text/javascript" src="main.js"></script>
+<body onload="yearFilmContent('<%= url %>')">
+	<script type="text/javascript" src="/responsive.js"></script>
+	<script type="text/javascript" src="/main.js"></script>
     <header>
 		<ul class ="nav">
 			<li><a href="/home">Trang chủ</a></li>
@@ -18,24 +18,24 @@
 				<a href="#">Năm phát hành</a>
 				<ul class="dropdown">
 					<div class="dropdown-row"> 
-						<li><a href="/year#2016">2016</a></li>
-						<li><a href="/year#2017">2017</a></li>
-						<li><a href="/year#2018">2018</a></li>
+						<li><a href="/year/2016">2016</a></li>
+						<li><a href="/year/2017">2017</a></li>
+						<li><a href="/year/2018">2018</a></li>
 					</div>
 					<div class="dropdown-row"> 
-						<li><a href="/year#2019">2019</a></li>
-						<li><a href="/year#2020">2020</a></li>
-						<li><a href="/year#2021">2021</a></li>
+						<li><a href="/year/2019">2019</a></li>
+						<li><a href="/year/2020">2020</a></li>
+						<li><a href="/year/2021">2021</a></li>
 					</div>
 					<div class="dropdown-row"> 
-						<li><a href="/year#2022">2022</a></li>
-						<li><a href="/year#2023">2023</a></li>
-						<li><a href="/year#2024">2024</a></li>
+						<li><a href="/year/2022">2022</a></li>
+						<li><a href="/year/2023">2023</a></li>
+						<li><a href="/year/2024">2024</a></li>
 					</div>
 				</ul>
 			</li>
 		</ul>
-		<img src="./conluong.jfif" class="banner">
+		<img src="/conluong.jfif" class="banner">
     </header>
     <main>
 		<!--main content-->
