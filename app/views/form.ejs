@@ -50,22 +50,22 @@
         <!-- Form đăng tải phim -->
         <section class="upload-film">
             <h1>ĐĂNG TẢI PHIM NGAY</h1>
-            <form action="#" method="post" id="film-upload-form">
+            <form action="/submit" method="post" id="film-upload-form">
                 <div class="form-group">
-                    <label for="film-name">Tên phim:</label>
-                    <input type="text" id="film-name" name="film-name" required>
+                    <label for="name">Tên phim:</label>
+                    <input type="text" id="name" name="name" required>
                 </div>
                 <div class="form-group">
-                    <label for="film-description">Mô tả phim:</label>
-                    <textarea id="film-description" name="film-description" rows="6" required></textarea>
+                    <label for="description">Mô tả phim:</label>
+                    <textarea id="description" name="description" rows="6" required></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="film-author">Tác giả:</label>
-                    <input type="text" id="film-author" name="film-author" required>
+                    <label for="author">Tác giả:</label>
+                    <input type="text" id="author" name="author" required>
                 </div>
                 <div class="form-group">
-                    <label for="release-year">Năm phát hành:</label>
-                    <select id="release-year" name="release-year">
+                    <label for="year">Năm phát hành:</label>
+                    <select id="year" name="year">
                         <option value="">Chọn năm</option>
                         <option value="2014">2014</option>
                         <option value="2015">2015</option>
@@ -81,30 +81,14 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="thumbnail-url">Địa chỉ thumbnail:</label>
-                    <input type="text" id="thumbnail-url" name="thumbnail-url" required>
+                    <label for="url">Địa chỉ thumbnail:</label>
+                    <input type="text" id="url" name="url" required>
                 </div>
                 <div class="form-group">
-                    <label for="film-source">Nguồn phim:</label>
-                    <input type="text" id="film-source" name="film-source" required>
+                    <label for="source">Nguồn phim:</label>
+                    <input type="text" id="source" name="source" required>
                 </div>
                 <button type="submit" class="submit-btn"><b>Đăng tải phim</b></button>
-                <script>
-                    var button = document.querySelector("button");
-                    button.addEventListener("click", ()=>{
-                        var obj = {
-                            name: "skibidi",
-                            pass: "sigma"
-                        }
-                        fetch("/form", {
-                            method: "POST",
-                            headers: {
-                                "Content-type":"application/json"
-                            },
-                            body:JSON.stringify(obj)
-                        })
-                    })
-                </script>
             </form>
         </section>
     </main>

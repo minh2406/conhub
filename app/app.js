@@ -24,23 +24,6 @@ var port = 8080;
 
 app.set('views', __dirname + '/views');
 app.use(express.static(__dirname + '/views'));
-/*
-//mysql
-const mysql = require('mysql2');
-const connection = mysql.createConnection({
-  host: 'localhost',
-  port: 3306,
-  user: 'root',
-  password: 'minhphudeptrai',
-  database: 'mydb'
-});
-connection.query(
-  'SELECT * FROM films',
-  (err,results,fields) => {
-
-  }
-);
-*/
 //dotenv
 require('dotenv').config();
 //postgreSQL
@@ -90,7 +73,13 @@ client.query('Select * from films', (err, res)=>{
           dbData: fetchData,
         });
       });
-      
+      app.get('/form', function(req, res){
+        res.render('form.ejs', {
+          title: 'Đăng tải phim - Con hub',
+          url: req.originalUrl,
+          dbData: fetchData,
+        });
+      });
       app.listen(port);
       console.log("web is running");
     }
@@ -99,3 +88,35 @@ client.query('Select * from films', (err, res)=>{
     }
     client.end;
 });
+//body-parser
+app.use(express.urlencoded({extended: true}));
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());
+
+app.post('/submit', function(req, res){
+  const {name, description, author, year, url, source} = req.body;
+  addData(filter(name), filter(description), filter(author), filter(year), filter(url), filter(source));
+})
+function filter(data)
+{
+  return filt = data.replace(/"/g, '\\"');
+}
+function addData(name, description, author, year, url, source)
+{
+  console.log(name,"\n", `"${description}"`,"\n", author,"\n", year,"\n", url,"\n", source);
+  client.query(`INSERT INTO films (name, description, author, year, img, src)
+  VALUES ($$${name}$$,
+      $$${description}$$,
+      $$${author}$$,
+      ${year},
+      $$${url}$$,
+      $$${source}$$);`, (err, res)=>{
+    if(!err){
+      console.log(res.rows);
+    }
+    else {
+      console.log(err.message);
+    }
+    client.end;
+  });
+}

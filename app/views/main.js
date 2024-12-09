@@ -182,6 +182,7 @@ function loadSubContent(){
 function mainPageContentLoad(dbData)
 {
 	contentList = sortData(JSON.parse(dbData));
+	console.log(contentList);
 	mainContentList = contentList;
 	loadContent();
 	return;
@@ -214,9 +215,9 @@ function nextContent(){
 	}
 }
 function previousContent(){
-	if(mainContentIndex - maxMainContentLength > 0)
+	if(mainContentIndex - maxMainContentLength >= 0)
 	{
-		mainContentShow -= maxMainContentLength;
+		mainContentShow -= mainContentShow - mainContentIndex;
 		mainContentIndex = mainContentShow - maxMainContentLength;
 		loadContent();
 	}
@@ -233,9 +234,9 @@ function loadFilm(url, dbData){
 	let video = document.getElementById("video");
 	let details = document.getElementById("details");
 	let filmId = url.split('watch/')[1];
-	video.src = contentList[filmId - 1].src;
-	details.innerHTML = `<h1 class="name">${contentList[filmId - 1].name}</h1>
-			<p class="description">${contentList[filmId - 1].description}</p>`;
+	video.src = contentList[contentList.length - filmId].src;
+	details.innerHTML = `<h1 class="name">${contentList[contentList.length - filmId].name}</h1>
+			<p class="description">${contentList[contentList.length - filmId].description}</p>`;
 }
 function loadTitle(text){
 	let mainContent = document.getElementById("main-content");
@@ -293,9 +294,13 @@ function searchOn(){
         searchContentList[i].style.display = "block";
     }
 }
-function searchOff(){
+function focusOff()
+{
 	var searchContentList = document.getElementsByClassName("search-content");
 	for (let i = 0; i < searchContentList.length; i++) {
         searchContentList[i].style.display = "none";
     }
+}
+function searchOff(){
+	setTimeout(focusOff, 200);
 }
