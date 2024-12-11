@@ -234,9 +234,15 @@ function loadFilm(url, dbData){
 	let video = document.getElementById("video");
 	let details = document.getElementById("details");
 	let filmId = url.split('watch/')[1];
-	video.src = contentList[contentList.length - filmId].src;
-	details.innerHTML = `<h1 class="name">${contentList[contentList.length - filmId].name}</h1>
-			<p class="description">${contentList[contentList.length - filmId].description}</p>`;
+	for(var content of contentList)
+	{
+		if(content.id == filmId)
+		{	
+			video.src = content.src;
+			details.innerHTML = `<h1 class="name">${content.name}</h1>
+					<p class="description">${content.description}</p>`;
+		}
+	}
 }
 function loadTitle(text){
 	let mainContent = document.getElementById("main-content");

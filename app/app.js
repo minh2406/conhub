@@ -24,6 +24,7 @@ var port = 8080;
 
 app.set('views', __dirname + '/views');
 app.use(express.static(__dirname + '/views'));
+var bodyParser = require('body-parser');
 //dotenv
 require('dotenv').config();
 //postgreSQL
@@ -86,11 +87,10 @@ client.query('Select * from films', (err, res)=>{
     else {
       console.log(err.message);
     }
-    client.end;
 });
 //body-parser
 app.use(express.urlencoded({extended: true}));
-var bodyParser = require('body-parser');
+
 app.use(bodyParser.json());
 
 app.post('/submit', function(req, res){
@@ -99,7 +99,10 @@ app.post('/submit', function(req, res){
 })
 function filter(data)
 {
-  return filt = data.replace(/"/g, '\\"');
+  var filted = data;
+  filted = filted.replace(/"/g, '\\"');
+  filted = filted.replace(/\r\n/g, '<br>');
+  return filted;
 }
 function addData(name, description, author, year, url, source)
 {
