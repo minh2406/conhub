@@ -419,6 +419,41 @@ function search()
         }
     }
 }
+//change to search page
+function searchPage()
+{
+	search = document.getElementById("search");
+	location.href = "/search/" + "value=" + search.value; 	
+}
+//searchpage
+function searchContent(url, dbData){
+	checkLogin();
+	contentList = sortData(JSON.parse(dbData));
+	//let year = url.split('year/')[1];
+	//year = year.split("/page/")[0];
+	mainContentList = [];
+	// Check year if right add to main content list
+	var input, filter, a, txtValue, idValue;
+    input = url;
+	console.log(input);
+	input = input.substring(
+		input.indexOf("value=") + 6, 
+		input.lastIndexOf("/page") != -1 ? input.lastIndexOf("/page") : input.lastIndexOf("")
+	);
+    filter = input.toUpperCase();
+    for (let i = 0; i < contentList.length; i++) {
+        var content = contentList[i];
+        txtValue = content.name;
+		idValue = "" + content.id;
+		console.log(idValue);
+        if (txtValue.toUpperCase().indexOf(filter) > -1 || idValue.toUpperCase().indexOf(filter) > -1) {
+            mainContentList.push(content); // Neu dung search
+		}
+    }
+	loadTitle(`Kết quả tìm kiếm của: ${input}` );
+	loadContent();
+	return;
+}
 //Search bat len khi click
 function searchOn(){
 	var searchContentList = document.getElementsByClassName("search-content");

@@ -41,7 +41,8 @@
 			</li>
 			<li><a href="/form">Thêm phim</a></li>
 			<li class="search">
-				<input type="text" id ="search" placeholder="Tìm tên phim" class="search-box" onkeyup="search()" onfocus="searchOn()" onfocusout="searchOff()" autocomplete="off">
+				<input type="text" id ="search" placeholder="Tìm tên/id phim" class="search-box" onkeyup="search()" onfocus="searchOn()" onfocusout="searchOff()" autocomplete="off">
+				<button class="search-button" onclick="searchPage()">Search</button>
 				<ul id = "search-container">
 				</ul>
 			</li>

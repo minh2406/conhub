@@ -79,6 +79,9 @@ function fetchAndRender(require, result, web, title, errMess)
 app.get('/', function (req, res) {
   fetchAndRender(req, res, 'index.ejs', 'Trang chủ - Con hub');
 });
+app.get('/search/*', function (req, res) {
+  fetchAndRender(req, res, 'search.ejs', 'Tìm kiếm - Con hub');
+});
 app.get('/page/*', function (req, res) {
   fetchAndRender(req, res, 'index.ejs', 'Trang chủ - Con hub');
 });

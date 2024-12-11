@@ -484,3 +484,8 @@ textarea {
     outline: none;
     box-shadow: 0 0 4px #FF8A00;
 }
+/*search button*/
+.search-button {
+    color: #000000;
+    padding: 5px;
+}
