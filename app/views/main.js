@@ -371,7 +371,7 @@ function yearFilmContent(url, dbData){
 	checkLogin();
 	contentList = sortData(JSON.parse(dbData));
 	let year = url.split('year/')[1];
-	year = year.split("page/")[0];
+	year = year.split("/page/")[0];
 	mainContentList = [];
 	// Check year if right add to main content list
 	for (var content of contentList)
@@ -447,4 +447,28 @@ function favouriteContent(dbData, user_favourite, user_name)
 	mainContentList = subContentList;
 	loadContent();
 	loadTitle(`Phim yêu thích`);
+}
+//preview form
+function thumnailPreview(){
+	const urlInput = document.getElementById('url').value;
+        const previewContainer = document.getElementById('thumbnail-preview');
+        const thumbnailImg = document.getElementById('thumbnail-img');
+        
+        if (urlInput) {
+            thumbnailImg.src = urlInput;  // Set image source
+            previewContainer.style.display = 'block';  // Show the image preview
+        } else {
+            previewContainer.style.display = 'none';  // Hide the image preview if no URL
+        }
+}
+function videoPreview(){
+	const sourceInput = document.getElementById('source').value;
+        const previewContainer = document.getElementById('source-preview');
+        const iframe = document.getElementById('source-iframe');
+        if (sourceInput) {
+			iframe.src = sourceInput;
+            previewContainer.style.display = 'block';  // Show the iframe preview
+        } else {
+            previewContainer.style.display = 'none';  // Hide the iframe preview if no URL
+        }
 }
