@@ -154,13 +154,6 @@ function loadMainContent(){
 	}
 }
 function loadSubContent(){
-	subContentList = [
-		contentList[3],
-		contentList[2],
-		contentList[1],
-		contentList[4],
-		contentList[0],
-	];
 	let subContent = document.getElementById("sub-content");
 	let i = 0;
 	if(subContent)
@@ -181,6 +174,22 @@ function loadSubContent(){
 		}
 	}
 }
+function getUserFavourite(user_favourite)
+{
+	let favList = [];
+	let idFavourite = user_favourite.split("id=");
+	for(var id of idFavourite)
+	{
+		for(var content of contentList)
+		{
+			if(content.id == id)
+			{
+				favList.unshift(content);
+			}
+		}
+	}
+	return favList;
+}
 function getPage()
 {
 	let page = window.location.href.split("page/")[1] != (NaN || undefined) ? window.location.href.split("page/")[1] : 1;
@@ -199,11 +208,12 @@ function getPage()
 	}
 	console.log(page, mainContentIndex, mainContentShow);
 }
-function mainPageContentLoad(dbData)
+function mainPageContentLoad(dbData, user_favourite)
 {
 	contentList = sortData(JSON.parse(dbData));
 	console.log(contentList);
 	mainContentList = contentList;
+	subContentList = getUserFavourite(user_favourite);
 	loadContent();
 	return;
 }
@@ -239,7 +249,11 @@ function loadFilm(url, dbData){
 		if(content.id == filmId)
 		{	
 			video.src = content.src;
-			details.innerHTML = `<h1 class="name">${content.name}</h1>
+			details.innerHTML = `<h1 class="name film-name">${content.name}</h1>
+					<form action="/fav" method="post" id="fav-form">
+						<input type="text" id="fav_film" name="fav_film" style="display: none;" value=${content.id}>
+						<button type="submit" class="fav-btn"><b>Theo dõi</b></button>
+					</form>
 					<p class="description">${content.description}</p>`;
 		}
 	}

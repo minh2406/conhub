@@ -276,3 +276,17 @@
   .my-float{
 	  margin-top:22px;
   }
+  /*favourite*/
+.film-name{
+	display: inline-block;
+}
+#fav-form{
+	display: inline-block;
+	margin-left: 20px;
+}
+.fav-btn{
+	padding: 5px 10px;
+}
+.fav-btn b{
+	color: black;
+}
