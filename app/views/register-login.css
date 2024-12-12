@@ -10,7 +10,7 @@
     font-family: Arial, sans-serif;
 }
 
-h1 {
+.rl-form h1 {
     text-align: center;
     font-size: 24px;
     color: #ffffff;
@@ -33,6 +33,7 @@ h1 {
     border-radius: 5px;
     font-size: 16px;
     background-color: #ffffff; 
+    color: black;
     /* transition: border-color 0.3s ease, box-shadow 0.3s ease; */
 }
 
@@ -44,7 +45,7 @@ h1 {
 }
 
 
-.rl-form .form-button {
+ .form-button {
     width: 100%;
     padding: 10px 15px;
     background-color: #FF8A00; 

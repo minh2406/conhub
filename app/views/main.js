@@ -182,6 +182,7 @@ function loadSubContent(){
 			author[0].innerText = subContentList[i].author;
 		}
 	}
+	
 }
 // Turn database infor to list
 function getUserFavourite(user_favourite)
@@ -207,8 +208,8 @@ function getPage()
 	if(page < 1){
 		window.location.href = window.location.href.split("page/")[0] + "page/1";
 	}
-	if(page > contentList.length / maxMainContentLength + 1){
-		window.location.href = window.location.href.split("page/")[0] + "page/" +Math.ceil(contentList.length / maxMainContentLength);
+	if(page > mainContentList.length / maxMainContentLength + 1){
+		window.location.href = window.location.href.split("page/")[0] + "page/" +Math.ceil(mainContentList.length / maxMainContentLength);
 	}
 	page = page <= 0 ? 1 : page;
 	mainContentShow = page*maxMainContentLength;
@@ -225,15 +226,42 @@ function getPage()
 	}
 	console.log(page, mainContentIndex, mainContentShow);
 }
-// Load index
-function mainPageContentLoad(dbData, user_favourite)
+// Check login
+function checkLogin()
 {
+	let username = document.getElementById("user_name");
+	let login = document.getElementById("login");
+	if(username.innerText != "")
+	{
+		login.style.display = "none";
+	}
+}
+//check sub content
+function checkSub(user_name)
+{
+	if(user_name == "")
+	{
+		let subText = document.getElementById("sub-text");
+		subText.style.display = "block";
+	}
+}
+// Load index
+function mainPageContentLoad(dbData, user_favourite, user_name)
+{
+	checkLogin();
 	contentList = sortData(JSON.parse(dbData)); // Sort theo phim moi
 	console.log(contentList);
 	mainContentList = contentList; // Truyen gia tri cho main content
 	subContentList = getUserFavourite(user_favourite); // Truyen gia tri cho sub content
+	checkSub(user_name);
 	loadContent(); // Load content
 	return;
+}
+function subPageContentLoad(dbData, user_favourite)
+{
+	checkLogin();
+	contentList = sortData(JSON.parse(dbData));
+	loadSearchContent();
 }
 // Sort id from high to low
 function sortData(data)
@@ -291,6 +319,7 @@ function checkFavourite(filmId, user_favourite)
 }
 //Load film
 function loadFilm(url, dbData, user_favourite){
+	checkLogin();
 	// Get data
 	contentList = sortData(JSON.parse(dbData));
 	// Load search content
@@ -339,6 +368,7 @@ function loadTitle(text){
 }
 // Load year page
 function yearFilmContent(url, dbData){
+	checkLogin();
 	contentList = sortData(JSON.parse(dbData));
 	let year = url.split('year/')[1];
 	year = year.split("page/")[0];
@@ -381,7 +411,8 @@ function search()
     for (let i = 0; i < searchContentList.length; i++) {
         a = searchContentList[i].getElementsByTagName("a")[0];
         txtValue = a.innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+		idValue = a.href.split("watch/")[1];
+        if (txtValue.toUpperCase().indexOf(filter) > -1 || idValue.toUpperCase().indexOf(filter) > -1) {
             searchContentList[i].style.display = "block"; // Neu dung search
         } else {
             searchContentList[i].style.display = "none"; // Neu sai search
@@ -405,4 +436,15 @@ function focusOff()
 }
 function searchOff(){
 	setTimeout(focusOff, 200);
+}
+// favourite content
+function favouriteContent(dbData, user_favourite, user_name)
+{
+	checkLogin();
+	checkSub(user_name);
+	contentList = sortData(JSON.parse(dbData));
+	subContentList = getUserFavourite(user_favourite);
+	mainContentList = subContentList;
+	loadContent();
+	loadTitle(`Phim yêu thích`);
 }

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -7,11 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title><%= title %></title>
 	<link rel="stylesheet" href="/styles.css">
-	<link rel="stylesheet" href="/responsive.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
-<body onload="subPageContentLoad(`<%=JSON.stringify(dbData)%>`, '<%= user_favourite %>' , '<%= user_name %>')">
+<body onload="favouriteContent(`<%=JSON.stringify(dbData)%>`, '<%= user_favourite %>', '<%= user_name %>')">
 	<script type="text/javascript" src="/responsive.js"></script>
 	<script type="text/javascript" src="/main.js"></script>
     <header>
@@ -59,13 +57,40 @@
 		<img src="/banner.png" class="banner">
     </header>
     <main>
-        <form action="/login" method="post" class="rl-form">
-            <h1>Đăng Nhập</h1>
-            <p><%= errorMessage %></p>
-            <input type="name" name="name" placeholder="Name" required class=" form-input"><br>
-            <input type="password" name="password" placeholder="Password" required class=" form-input"><br>
-            <button type="submit" class="form-button">Đăng Nhập</button>
-        </form>
+		<!--main content-->
+		<section class="main-content" id="main-content">
+			<h1 class="title"></h1>
+                <p id = "sub-text"><a href="/login">Đăng nhập</a> để tạo danh sách phim yêu thích</p>
+				<span class="content">
+					<a class="img-container" href="test1.html#1"><img src="https://i.ytimg.com/vi/C7OQHIpDlvA/maxresdefault.jpg" class="content-img"></a>
+					<a class="name" href="test1.html#1">The Wait</a>
+				</span>
+				<span class="content">
+					<a class="img-container" href="test1.html#2"><img src="https://i.ytimg.com/vi/OrOYvVf6tIM/maxresdefault.jpg" class="content-img"></a>
+					<a class="name" href="test1.html#2">Other Side of the Box</a>
+				</span>
+				<span class="content">
+					<a class="img-container" href="test1.html#3"><img src="https://i.ytimg.com/vi/mhazCS14Tas/maxresdefault.jpg" class="content-img"></a>
+					<a class="name" href="test1.html#3">THE CHAIR</a>
+				</span>
+				<span class="content">
+					<a class="img-container" href="test1.html#4"><img src="https://i.ytimg.com/vi/BI9fKfX5V68/maxresdefault.jpg" class="content-img"></a>
+					<a class="name" href="test1.html#4">Portrait of God</a>
+				</span>
+				<span class="content">
+					<a class="img-container" href="test1.html#5"><img src="https://i.ytimg.com/vi/IyhoT3smJEQ/maxresdefault.jpg" class="content-img"></a>
+					<a class="name" href="test1.html#5">The Kid and the Camera</a>
+				</span>
+				<span class="content">
+					<a class="img-container" href="test1.html#6"><img src="https://i.ytimg.com/vi/thpF81-wrMs/maxresdefault.jpg" class="content-img"></a>
+					<a class="name" href="test1.html#6">The Loop</a>
+				</span>
+				<!--button-->
+			<div class="button-container">
+					<button class="previousButton" id="previousButton" onclick = "previousContent()">Trước</button>
+					<button class="nextButton" id="nextButton" onclick = "nextContent()">Sau</button>
+				</div>
+		</section>
     </main>
     <footer>
 		<div class="about" id="about">
@@ -75,6 +100,10 @@
 			<p>Contact: <a href="#">Conluong@gmail.com</a></p>
 		</div>
     </footer>
+	<!-- FLOAT BUTTON -->  
+	<a href="/home" class="float">
+        <i class="fa fa-home my-float"></i>
+        </a>
 </body>
 
 </html>

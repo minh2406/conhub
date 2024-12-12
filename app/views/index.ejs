@@ -10,7 +10,7 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
-<body onload="mainPageContentLoad(`<%=JSON.stringify(dbData)%>`, '<%= user_favourite %>')">
+<body onload="mainPageContentLoad(`<%=JSON.stringify(dbData)%>`, '<%= user_favourite %>', '<%= user_name %>')">
 	<script type="text/javascript" src="/responsive.js"></script>
 	<script type="text/javascript" src="/main.js"></script>
     <header>
@@ -19,19 +19,23 @@
 			<li><a href="#about">Thông tin</a></li>
 			<li class="dropbox">
 				<a href="#">Năm phát hành</a>
-				<ul class="dropdown">
+                <ul class="dropdown">
 					<div class="dropdown-row"> 
+						<li><a href="/year/2014">2014</a></li>
+						<li><a href="/year/2015">2015</a></li>
 						<li><a href="/year/2016">2016</a></li>
+					</div>
+					<div class="dropdown-row"> 
 						<li><a href="/year/2017">2017</a></li>
 						<li><a href="/year/2018">2018</a></li>
+						<li><a href="/year/2019">2019</a></li>
 					</div>
 					<div class="dropdown-row"> 
-						<li><a href="/year/2019">2019</a></li>
 						<li><a href="/year/2020">2020</a></li>
 						<li><a href="/year/2021">2021</a></li>
+						<li><a href="/year/2022">2022</a></li>
 					</div>
 					<div class="dropdown-row"> 
-						<li><a href="/year/2022">2022</a></li>
 						<li><a href="/year/2023">2023</a></li>
 						<li><a href="/year/2024">2024</a></li>
 					</div>
@@ -43,16 +47,20 @@
 				<ul id = "search-container">
 				</ul>
 			</li>
-			<li><a href="/login">Đăng nhập</a></li>
-			<li><a href="/register">Đăng kí</a></li>
-			<li><a href ="#"><%= user_name %></a></li>
+			<li class="login" id = "login"><a href="/login">Đăng nhập</a></li>
+			<li class="username" id="username">
+				<a href="#" id="user_name"><%= user_name %></a>
+				<ul class="dropdown-logout">
+					<li><a href="/logout" id="logoutButton">Đăng xuất</a></li>
+				</ul>
+			</li>
 		</ul>
 		<img src="/banner.png" class="banner">
     </header>
     <main>
 		<!--main content-->
 		<section class="main-content" id="main-content">
-			<h1 class="title">Con moi</h1>
+			<h1 class="title">Phim mới</h1>
 				<span class="content">
 					<a class="img-container" href="/watch#1"><img src="https://i.ytimg.com/vi/C7OQHIpDlvA/maxresdefault.jpg" class="content-img"></a>
 					<a class="name" href="/watch#1">The Wait</a>
@@ -84,7 +92,8 @@
 				</div>
 		</section>
 		<!--sub content-->
-		<section class="sub-content" id="sub-content"><h1 class="title">Con hot</h1>
+		<section class="sub-content" id="sub-content"><h1 class="title"><a href = "/favourite" class="sub-title">Phim yêu thích</a></h1>
+			<p id = "sub-text"><a href="/login">Đăng nhập</a> để tạo danh sách phim yêu thích</p>
 			<span class="content">
 				<a class="img-container" href="test1.html#1"><img src="https://i.ytimg.com/vi/C7OQHIpDlvA/maxresdefault.jpg" class="content-img"></a>
 				<span class="details">

@@ -178,8 +178,15 @@
 	  /*border: 3px outset #2d2d2d;
 	  border-radius: 3px;*/
 	  display: block;
-	  float: right;
+	  float: left;
 	  margin: 20px auto;
+	  overflow: auto;
+  }
+  .sub-title {
+	color: var(--title-color);
+  }
+  .sub-title:hover{
+	color: white;
   }
   .sub-content .content{
 	  margin: 20px 0;
@@ -289,4 +296,191 @@
 }
 .fav-btn b{
 	color: black;
+}
+/* Username dropdown */
+.username {
+    position: relative;
+    display: inline-block;
+}
+
+.username .dropdown-logout {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #333;
+    border-radius: 3px;
+    min-width: 60px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    z-index: 1000;
+}
+
+.username:hover .dropdown-logout {
+    display: block;
+}
+
+.username .dropdown-logout li {
+    padding: 10px;
+    text-align: left;
+}
+
+.username .dropdown-logout li a {
+    color: white;
+    text-decoration: none;
+}
+
+.username .dropdown-logout li:hover {
+    background-color: #FF8A00;
+}
+/*register - login*/
+
+.rl-form {
+    width: 100%;
+    max-width: 400px;
+    margin: 50px auto; 
+    background-color: #2f2f2f; 
+    padding: 10px 30px;
+    border-radius: 8px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    font-family: Arial, sans-serif;
+}
+
+.rl-form h1 {
+    text-align: center;
+    font-size: 24px;
+    color: #ffffff;
+    /* color:#FF8A00; */
+    margin-bottom: 20px;
+}
+
+.rl-form p {
+    color: red; 
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.rl-form .form-input {
+    width: 100%;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc; 
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #ffffff; 
+    color: black;
+    /* transition: border-color 0.3s ease, box-shadow 0.3s ease; */
+}
+
+
+.rl-form .form-input:focus {
+    border-color: #FF8A00; 
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.5); 
+    outline: none; 
+}
+
+
+ .form-button {
+    width: 100%;
+    padding: 10px 15px;
+    background-color: #FF8A00; 
+    color: #fff; 
+    border: none; 
+    border-radius: 5px; 
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer; 
+    /* transition: background-color 0.3s ease, transform 0.2s ease; */
+}
+
+
+.rl-form .form-button:hover {
+    background-color: #000000; 
+}
+
+.rl-form .form-button:active {
+    background-color: #252525; 
+
+}
+/* sub text */
+#sub-text{
+	font-size: 16px;
+	display: none;
+}
+/*Upload film*/
+.upload-film {
+    max-width: 600px;
+    margin: 40px auto;
+    background: #000000;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.upload-film h1  {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #FF8A00;;
+    font-weight: bold;
+}
+
+.upload-film .form-group {
+    margin-bottom: 15px;
+}
+
+.upload-film label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.upload-film input[type="text"],
+input[type="number"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.upload-film input, textarea {
+    resize: vertical;
+    color: black; 
+}
+
+.upload-film .submit-btn {
+    width: 100%;
+    padding: 10px;
+    background: #FF8A00;
+    color: #000000;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.upload-film .submit-btn:hover {
+    background: #000000;
+    color: #FF8A00;
+}
+.upload-film option {
+    color: black;
+}
+.upload-film select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: #fff;
+    color: #333;
+    cursor: pointer;
+}
+
+.upload-film select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 4px #FF8A00;
 }

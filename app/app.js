@@ -56,7 +56,7 @@ app.use(async (req, res, next) => {
 });
 client.connect(); // Connect to database
 // Get database infor and render web
-function fetchAndRender(require, result, web, title) 
+function fetchAndRender(require, result, web, title, errMess) 
 {
   client.query('Select * from films', (err, res) => {
     if (!err) {
@@ -67,7 +67,7 @@ function fetchAndRender(require, result, web, title)
         dbData: fetchData,
         user_name: require.session.user ? require.session.user.name : "",
         user_favourite: require.session.user ? require.session.user.favourite : "",
-        errorMessage: ""
+        errorMessage: errMess ? errMess : ""
       });
     }
     else {
@@ -104,10 +104,16 @@ app.get('/submit', function (req, res) {
   fetchAndRender(req, res, 'filmSubmit.ejs', 'Đăng tải phim - Con hub');
 });
 app.get("/register", (req, res) => {
-  fetchAndRender(req, res, 'register.ejs', 'Trang chủ - Con hub');
+  fetchAndRender(req, res, 'register.ejs', 'Đăng kí - Con hub');
 });
 app.get("/login", (req, res) => {
-  fetchAndRender(req, res, 'login.ejs', 'Trang chủ - Con hub');
+  fetchAndRender(req, res, 'login.ejs', 'Đăng nhập - Con hub');
+});
+app.get("/favourite", (req, res) => {
+  fetchAndRender(req, res, 'favourite.ejs', 'Phim yêu thích - Con hub');
+});
+app.get("/favourite/*", (req, res) => {
+  fetchAndRender(req, res, 'favourite.ejs', 'Phim yêu thích - Con hub');
 });
 /*------------------------------------------------------------------------------------------------------*/
 app.listen(port); // Run web on port
@@ -159,7 +165,7 @@ app.post("/register", async (req, res) => {
 
       if (result.rows.length > 0) {
         // If user already exists, return an error message
-        return res.render("register.ejs", { errorMessage: "The username is already taken" });
+        return fetchAndRender(req, res, 'register.ejs', 'Đăng kí - Con hub', "Tên người dùng đã bị đăng kí");
       }
       const hashedPassword = await password/*bcrypt.hash(password, 10)*/; //Phan /*  */ de ma hoa mat khau - da cancel
       // Add user to database
@@ -167,7 +173,7 @@ app.post("/register", async (req, res) => {
           "INSERT INTO users (name, password) VALUES ($1, $2)",
           [name, hashedPassword]
       );
-      res.render("register.ejs", { errorMessage: "User Registered Successfully!" }); // If successfully, return notification
+      fetchAndRender(req, res, 'register.ejs', 'Đăng kí - Con hub', "Đăng kí thành công!"); // If successfully, return notification
   } catch (err) {
     //Handling error
       console.error(err);
@@ -192,7 +198,7 @@ app.post("/login", async (req, res) => {
       return res.redirect("/home"); // Login success - go to home page
       }
       // Wrong name or pass - Send error message
-      res.render("login.ejs", { errorMessage: "Invalid name or password" });
+      fetchAndRender(req, res, 'login.ejs', 'Đăng nhập - Con hub', "Sai tên hoặc mật khẩu");
   } catch (err) {
       // Handling error
       console.error(err);
@@ -253,4 +259,14 @@ app.post("/unfav", async (req, res) => {
     console.error(err);
     res.status(500).send("Error removing favorite film");
   }
+});
+// Express example
+app.get('/logout', (req, res) => {
+  // Destroy session or clear authentication cookies
+  req.session.destroy((err) => {
+      if (err) {
+          return res.status(500).send("Failed to logout.");
+      }
+      res.redirect('/'); // Redirect the user to the homepage or login page
+  });
 });
