@@ -280,7 +280,7 @@ function sortData(data)
 // Load next page
 function nextContent(){
 	// Get current page
-	var loc = window.location.href.split("/page/")[1] != (NaN || undefined) ? parseInt(window.location.href.split("page/")[1]) + 1 : 1;
+	var loc = window.location.href.split("/page/")[1] != (NaN || undefined) ? parseInt(window.location.href.split("page/")[1]) + 1 : 1 + 1;
 	// Change page
 	// vd truong hop localhost/ va localhost/page/
 	if(window.location.href[window.location.href.length-1] != '/'){
