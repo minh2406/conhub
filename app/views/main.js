@@ -1,8 +1,9 @@
-let maxMainContentLength = 6;
-let mainContentShow = maxMainContentLength;
-let mainContentIndex = 0;
-let subContentShow = 6;
-let subContentIndex = 0;
+let maxMainContentLength = 6; // How many content to show in main
+let mainContentShow = maxMainContentLength; // Show content to
+let mainContentIndex = 0; // Show content from
+let subContentShow = 6; // How many content to show in sub
+let subContentIndex = 0; // Sub content start
+// Storage all film
 var contentList = [
 		{
 			img: 'https://i.ytimg.com/vi/C7OQHIpDlvA/maxresdefault.jpg',
@@ -106,6 +107,7 @@ var contentList = [
 			year: 2020,
 		},
 	];
+// Store main content film
 var mainContentList = [
 	contentList[0],
 	contentList[1],
@@ -116,9 +118,11 @@ var mainContentList = [
 	contentList[2],
 	contentList[3],
 ];
+// Store sub content film
 var subContentList = [
 	
 ];
+// Load content
 function loadContent() {
 	/*reset*/
 	clearContent();
@@ -131,6 +135,7 @@ function loadContent() {
 	/*load search content*/
 	loadSearchContent();
 }
+// Clear all film
 function clearContent()
 {
 	let contentContainer = document.getElementsByClassName("content");
@@ -139,13 +144,16 @@ function clearContent()
 		content.style.display = "none";
 	}
 }
+// Load main Film
 function loadMainContent(){
 	let mainContent = document.getElementById("main-content");
 	for (let i = mainContentIndex; i < mainContentShow; i++){
+		// Get page content
 		let contentContainer = mainContent.getElementsByClassName("content");
 		let imgContainer = contentContainer[i-mainContentIndex].getElementsByClassName("img-container");
 		let contentImg = contentContainer[i-mainContentIndex].getElementsByClassName("content-img");
 		let contentName = contentContainer[i-mainContentIndex].getElementsByClassName("name");
+		// Load page content
 		contentContainer[i-mainContentIndex].style.display = "inline-block";
 		imgContainer[0].href = `/watch/${mainContentList[i].id}`;
 		contentImg[0].src = mainContentList[i].img;
@@ -153,27 +161,29 @@ function loadMainContent(){
 		contentName[0].innerText = mainContentList[i].name;
 	}
 }
+// Load sub Film
 function loadSubContent(){
 	let subContent = document.getElementById("sub-content");
-	let i = 0;
-	if(subContent)
+	if(subContent) // If sub content exist
 	{
-		for (var content of subContentList){
+		for (let i = subContentIndex; i < subContentShow && i < subContentList.length; i++){
+			// Get page content
 			let contentContainer = subContent.getElementsByClassName("content");
 			let imgContainer = contentContainer[i].getElementsByClassName("img-container");
 			let contentImg = contentContainer[i].getElementsByClassName("content-img");
 			let contentName = contentContainer[i].getElementsByClassName("name");
 			let author = contentContainer[i].getElementsByClassName("description");
+			// Load page content
 			contentContainer[i].style.display = "block";
 			imgContainer[0].href = `/watch/${subContentList[i].id}`;
-			contentImg[0].src = content.img;
+			contentImg[0].src = subContentList[i].img;
 			contentName[0].href = `/watch/${subContentList[i].id}`;
-			contentName[0].innerText = content.name;
-			author[0].innerText = content.author;
-			i++;
+			contentName[0].innerText = subContentList[i].name;
+			author[0].innerText = subContentList[i].author;
 		}
 	}
 }
+// Turn database infor to list
 function getUserFavourite(user_favourite)
 {
 	let favList = [];
@@ -190,6 +200,7 @@ function getUserFavourite(user_favourite)
 	}
 	return favList;
 }
+// Load page base on URL
 function getPage()
 {
 	let page = window.location.href.split("page/")[1] != (NaN || undefined) ? window.location.href.split("page/")[1] : 1;
@@ -214,15 +225,17 @@ function getPage()
 	}
 	console.log(page, mainContentIndex, mainContentShow);
 }
+// Load index
 function mainPageContentLoad(dbData, user_favourite)
 {
-	contentList = sortData(JSON.parse(dbData));
+	contentList = sortData(JSON.parse(dbData)); // Sort theo phim moi
 	console.log(contentList);
-	mainContentList = contentList;
-	subContentList = getUserFavourite(user_favourite);
-	loadContent();
+	mainContentList = contentList; // Truyen gia tri cho main content
+	subContentList = getUserFavourite(user_favourite); // Truyen gia tri cho sub content
+	loadContent(); // Load content
 	return;
 }
+// Sort id from high to low
 function sortData(data)
 {
 	let tempData = data;
@@ -236,8 +249,12 @@ function sortData(data)
 	}
 	return tempData;
 }
+// Load next page
 function nextContent(){
+	// Get current page
 	var loc = window.location.href.split("/page/")[1] != (NaN || undefined) ? parseInt(window.location.href.split("page/")[1]) + 1 : 1;
+	// Change page
+	// vd truong hop localhost/ va localhost/page/
 	if(window.location.href[window.location.href.length-1] != '/'){
 		window.location.href = window.location.href.split("/page/")[0] + "/page/" + loc;
 	}
@@ -245,8 +262,12 @@ function nextContent(){
 		window.location.href = window.location.href.split("/page/")[0] + "page/" + loc;
 	}
 }
+// Load previous page
 function previousContent(){
+	// Get current page
 	var loc = window.location.href.split("/page/")[1] != (NaN || undefined) ? parseInt(window.location.href.split("page/")[1]) - 1 : 1;
+	// Change page
+	// vd truong hop localhost/ va localhost/page/
 	if(window.location.href[window.location.href.length-1] != '/'){
 		window.location.href = window.location.href.split("/page/")[0] + "/page/" + loc;
 	}
@@ -254,6 +275,7 @@ function previousContent(){
 		window.location.href = window.location.href.split("/page/")[0] + "page/" + loc;
 	}
 }
+// Check the film has been favourited or not
 function checkFavourite(filmId, user_favourite)
 {
 	let favouriteList = getUserFavourite(user_favourite);
@@ -267,17 +289,24 @@ function checkFavourite(filmId, user_favourite)
 	}
 	return false;
 }
+//Load film
 function loadFilm(url, dbData, user_favourite){
+	// Get data
 	contentList = sortData(JSON.parse(dbData));
+	// Load search content
 	loadSearchContent();
+	// Get page content
 	let video = document.getElementById("video");
 	let details = document.getElementById("details");
 	let filmId = url.split('watch/')[1];
-	let isFavourite = checkFavourite(filmId, user_favourite);
+	let isFavourite = checkFavourite(filmId, user_favourite); // check if favourited
+	// load film base on id
 	for(var content of contentList)
 	{
 		if(content.id == filmId)
-		{	if(!isFavourite)
+		{	
+			// Khong favourited
+			if(!isFavourite)
 			{
 				video.src = content.src;
 				details.innerHTML = `<h1 class="name film-name">${content.name}</h1>
@@ -288,6 +317,7 @@ function loadFilm(url, dbData, user_favourite){
 					<p class="description">${content.description}</p>`;
 					console.log("theo dõi");
 			}
+			// Favourited
 			else
 			{
 				video.src = content.src;
@@ -301,16 +331,19 @@ function loadFilm(url, dbData, user_favourite){
 		}
 	}
 }
+// Load Title main content
 function loadTitle(text){
 	let mainContent = document.getElementById("main-content");
 	let title = mainContent.getElementsByClassName("title");
 	title[0].innerText = text;
 }
+// Load year page
 function yearFilmContent(url, dbData){
 	contentList = sortData(JSON.parse(dbData));
 	let year = url.split('year/')[1];
 	year = year.split("page/")[0];
 	mainContentList = [];
+	// Check year if right add to main content list
 	for (var content of contentList)
 	{
 		if(content.year == year)
@@ -326,8 +359,10 @@ function yearFilmContent(url, dbData){
 	loadContent();
 	return;
 }
+//Load search content
 function loadSearchContent()
 {
+	//Load all list content to search
 	let searchContainer = document.getElementById("search-container");
 	for (var content of contentList)
 	{
@@ -336,6 +371,7 @@ function loadSearchContent()
 						</li>`
 	}
 }
+//Search
 function search()
 {
 	var input, filter, a, txtValue, searchContentList;
@@ -346,18 +382,20 @@ function search()
         a = searchContentList[i].getElementsByTagName("a")[0];
         txtValue = a.innerText;
         if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            searchContentList[i].style.display = "block";
+            searchContentList[i].style.display = "block"; // Neu dung search
         } else {
-            searchContentList[i].style.display = "none";
+            searchContentList[i].style.display = "none"; // Neu sai search
         }
     }
 }
+//Search bat len khi click
 function searchOn(){
 	var searchContentList = document.getElementsByClassName("search-content");
 	for (let i = 0; i < searchContentList.length; i++) {
         searchContentList[i].style.display = "block";
     }
 }
+//Search tat khi click ra
 function focusOff()
 {
 	var searchContentList = document.getElementsByClassName("search-content");

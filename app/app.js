@@ -1,18 +1,18 @@
 //app.js
 
-var express = require('express');
+var express = require('express'); // Chay web
 var app = express();
 var port = 8080;
 
-app.set('views', __dirname + '/views');
-app.use(express.static(__dirname + '/views'));
+app.set('views', __dirname + '/views');// Dat duong dan file
+app.use(express.static(__dirname + '/views'));// Dat duong dan file
 var bodyParser = require('body-parser');
 //dotenv
-require('dotenv').config();
+require('dotenv').config(); // Read file .env
 //bcryptjs
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs'); // Ma hoa password
 //session
-const session = require('express-session');
+const session = require('express-session'); // Local storage - bo nho tam thoi
 app.use(session({
   secret: process.env.SESSION_SECRET,  // A secret key to sign the session ID cookie (should be stored securely in .env)
   resave: false,                      // Don't save session if it was not modified
@@ -20,13 +20,13 @@ app.use(session({
   cookie: { secure: false }           // Set `secure: true` if using HTTPS
 }));
 //postgreSQL
-const User = process.env.PG_User;
-const Password = process.env.PG_Password;
-const Database = process.env.PG_Database;
-const Host = process.env.PG_Host;
-const Port = process.env.PG_Port;
-const { Client } = require('pg');
-const client = new Client({
+const User = process.env.PG_User; // Username sql
+const Password = process.env.PG_Password; // Password sql
+const Database = process.env.PG_Database; // Name database
+const Host = process.env.PG_Host; // Host sql
+const Port = process.env.PG_Port; // Port sql
+const { Client } = require('pg'); // Call Postgresql module
+const client = new Client({ // Create connection
   host: Host,
   user: User,
   port: Port,
@@ -34,36 +34,29 @@ const client = new Client({
   database: Database,
   ssl: true
 })
-app.use(async (req, res, next) => {
+// Update session theo database
+app.use(async (req, res, next) => { 
   if (req.session.user) {
     try {
-      // Fetch the current user's data from the database (you can also fetch other data like 'favourite' if needed)
-      const result = await client.query('SELECT * FROM users WHERE id = $1', [req.session.user.id]);
-
-      // Update session with the latest user data
+      // Fetch the current user's data
+      const result = await client.query('SELECT * FROM users WHERE id = $1', [req.session.user.id]); 
+      // Update session
       const user = result.rows[0];
-      
-      // Update session user information (you can add more session properties if needed)
       req.session.user.name = user.name;
       req.session.user.favourite = user.favourite;
-
-      // If the user has other session data (e.g., profile image, etc.), you can update them here.
-      // For example:
-      // req.session.user.profileImage = user.profile_image;
-
     } catch (err) {
       console.error(err);
-      // Handle error (optional: you can send an error message or redirect to an error page)
+      // Handle error
       res.status(500).send("Error updating session");
       return;
     }
   }
-  
   // Call next middleware or route handler
-  next();
+  next(); // khong biet de lam gi that nhung co ve no can thiet
 });
-client.connect();
-function fetchAndRender(require, result, web, title)
+client.connect(); // Connect to database
+// Get database infor and render web
+function fetchAndRender(require, result, web, title) 
 {
   client.query('Select * from films', (err, res) => {
     if (!err) {
@@ -82,6 +75,7 @@ function fetchAndRender(require, result, web, title)
     }
   });
 }
+/*--------------------------------------render page--------------------------------------- */
 app.get('/', function (req, res) {
   fetchAndRender(req, res, 'index.ejs', 'Trang chủ - Con hub');
 });
@@ -109,25 +103,35 @@ app.get('/form', function (req, res) {
 app.get('/submit', function (req, res) {
   fetchAndRender(req, res, 'filmSubmit.ejs', 'Đăng tải phim - Con hub');
 });
-app.listen(port);
+app.get("/register", (req, res) => {
+  fetchAndRender(req, res, 'register.ejs', 'Trang chủ - Con hub');
+});
+app.get("/login", (req, res) => {
+  fetchAndRender(req, res, 'login.ejs', 'Trang chủ - Con hub');
+});
+/*------------------------------------------------------------------------------------------------------*/
+app.listen(port); // Run web on port
 console.log("web is running");
 
 //body-parser
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true })); // Use web URL
 
-app.use(bodyParser.json());
+app.use(bodyParser.json()); // Su dung dinh dang JSON
 
+//Post film
 app.post('/submit', function (req, res) {
   const { name, description, author, year, url, source } = req.body;
   addData(filter(name), filter(description), filter(author), filter(year), filter(url), filter(source));
   res.redirect('/submit');
 })
+//Filter special character
 function filter(data) {
   var filted = data;
   filted = filted.replace(/"/g, '\\"');
   filted = filted.replace(/\r\n/g, '<br>');
   return filted;
 }
+//Add film to database
 function addData(name, description, author, year, url, source) {
   console.log(name, "\n", `"${description}"`, "\n", author, "\n", year, "\n", url, "\n", source);
   client.query(`INSERT INTO films (name, description, author, year, img, src)
@@ -143,65 +147,59 @@ function addData(name, description, author, year, url, source) {
     else {
       console.log(err.message);
     }
-    //client.end;
     console.log("a");
   });
 }
-//register
-app.get("/register", (req, res) => {
-  fetchAndRender(req, res, 'register.ejs', 'Trang chủ - Con hub');
-});
-
+//Register
 app.post("/register", async (req, res) => {
   const { name, password } = req.body;
   
   try {
     const result = await client.query("SELECT * FROM users WHERE name = $1", [name]);
 
-      // If user already exists, return an error message
       if (result.rows.length > 0) {
-        // If login fails, send an error message back to the EJS template
+        // If user already exists, return an error message
         return res.render("register.ejs", { errorMessage: "The username is already taken" });
       }
-      const hashedPassword = await password/*bcrypt.hash(password, 10)*/;
+      const hashedPassword = await password/*bcrypt.hash(password, 10)*/; //Phan /*  */ de ma hoa mat khau - da cancel
+      // Add user to database
       await client.query(
           "INSERT INTO users (name, password) VALUES ($1, $2)",
           [name, hashedPassword]
       );
-      res.render("register.ejs", { errorMessage: "User Registered Successfully!" });
+      res.render("register.ejs", { errorMessage: "User Registered Successfully!" }); // If successfully, return notification
   } catch (err) {
+    //Handling error
       console.error(err);
       res.status(500).send("Error registering user");
   }
 });
 //login
-app.get("/login", (req, res) => {
-  fetchAndRender(req, res, 'login.ejs', 'Trang chủ - Con hub');
-});
-
 app.post("/login", async (req, res) => {
   const { name, password } = req.body;
 
   try {
       const result = await client.query("SELECT * FROM users WHERE name = $1", [name]);
       const user = result.rows[0];
-
-      if (user && (password == user.password/*await bcrypt.compare(password, user.password)*/)) {
+      // Check user password and update user information to web
+      if (user && (password == user.password/*await bcrypt.compare(password, user.password)*/)) { // Phan /* */ la ma hoa nhung da cancel
         req.session.user = {
           id: user.id,
           name: user.name,
           favourite: user.favourite
       };
 
-      return res.redirect("/home");
+      return res.redirect("/home"); // Login success - go to home page
       }
+      // Wrong name or pass - Send error message
       res.render("login.ejs", { errorMessage: "Invalid name or password" });
   } catch (err) {
+      // Handling error
       console.error(err);
       res.status(500).send("Server Error");
   }
 });
-//add favourite film
+// Add favourite film
 app.post("/fav", async (req, res) => {
   const { name, password } = req.body;
   const {fav_film} = req.body;
@@ -223,7 +221,7 @@ app.post("/fav", async (req, res) => {
       res.status(500).send("Error");
   }
 });
-//remove favourite film
+// Remove favourite film
 app.post("/unfav", async (req, res) => {
   const { fav_film } = req.body;
   try {
@@ -251,6 +249,7 @@ app.post("/unfav", async (req, res) => {
     }
     res.redirect(req.get('referer')); // Redirect back to the previous page
   } catch (err) {
+    // Handling error
     console.error(err);
     res.status(500).send("Error removing favorite film");
   }
