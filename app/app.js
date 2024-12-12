@@ -45,13 +45,22 @@ function fetchAndRender(require, result, web, title)
 app.get('/', function (req, res) {
   fetchAndRender(req, res, 'index.ejs', 'Trang chủ - Con hub');
 });
+app.get('/page/*', function (req, res) {
+  fetchAndRender(req, res, 'index.ejs', 'Trang chủ - Con hub');
+});
 app.get('/home', function (req, res) {
+  fetchAndRender(req, res, 'index.ejs', 'Trang chủ - Con hub');
+});
+app.get('/home/*', function (req, res) {
   fetchAndRender(req, res, 'index.ejs', 'Trang chủ - Con hub');
 });
 app.get('/watch/*', function (req, res) {
   fetchAndRender(req, res, 'viewFilm.ejs', 'Xem phim - Con hub');
 });
 app.get('/year/(*)', function (req, res) {
+  fetchAndRender(req, res, 'yearFilter.ejs', 'Năm phát hành - Con hub'); 
+});
+app.get('/year/(*)/*', function (req, res) {
   fetchAndRender(req, res, 'yearFilter.ejs', 'Năm phát hành - Con hub'); 
 });
 app.get('/form', function (req, res) {

@@ -122,6 +122,8 @@ var subContentList = [
 function loadContent() {
 	/*reset*/
 	clearContent();
+	/*get page*/
+	getPage();
 	/*load main content*/
 	loadMainContent();
 	/*load sub content*/
@@ -179,6 +181,24 @@ function loadSubContent(){
 		}
 	}
 }
+function getPage()
+{
+	let page = window.location.href.split("page/")[1] != (NaN || undefined) ? window.location.href.split("page/")[1] : 1;
+	page = page <= 0 ? 1 : page;
+	mainContentShow = page*maxMainContentLength;
+	mainContentIndex = mainContentShow - maxMainContentLength;
+	if(mainContentShow > mainContentList.length)
+	{
+		mainContentShow = mainContentList.length;
+		mainContentIndex = mainContentShow - (mainContentList.length % maxMainContentLength) > 0 ? mainContentShow - (mainContentList.length % maxMainContentLength) : 0;
+	}
+	if(mainContentIndex < 0)
+	{
+		mainContentIndex = 0;
+		mainContentShow = maxContentShow + maxMainContentLength < contentList.length ? maxContentShow + maxMainContentLength : contentList.length;
+	}
+	console.log(page, mainContentIndex, mainContentShow);
+}
 function mainPageContentLoad(dbData)
 {
 	contentList = sortData(JSON.parse(dbData));
@@ -201,32 +221,12 @@ function sortData(data)
 	return tempData;
 }
 function nextContent(){
-	if(mainContentShow + maxMainContentLength < mainContentList.length)
-	{
-		mainContentShow += maxMainContentLength;
-		mainContentIndex = mainContentShow - maxMainContentLength;
-		loadContent();
-	}
-	else if(mainContentIndex + maxMainContentLength < mainContentList.length)
-	{
-		mainContentShow = mainContentList.length;
-		mainContentIndex += maxMainContentLength;
-		loadContent();
-	}
+	var loc = window.location.href.split("/page/")[1] != (NaN || undefined) ? parseInt(window.location.href.split("page/")[1]) + 1 : 1;
+	window.location.href = window.location.href.split("/page/")[0] + "/page/" + loc;
 }
 function previousContent(){
-	if(mainContentIndex - maxMainContentLength >= 0)
-	{
-		mainContentShow -= mainContentShow - mainContentIndex;
-		mainContentIndex = mainContentShow - maxMainContentLength;
-		loadContent();
-	}
-	else if(mainContentIndex != 0)
-	{
-		mainContentShow = maxMainContentLength;
-		mainContentIndex = 0;
-		loadContent();
-	}
+	var loc = window.location.href.split("/page/")[1] != (NaN || undefined) ? parseInt(window.location.href.split("page/")[1]) - 1 : 1;
+	window.location.href = window.location.href.split("/page/")[0] + "/page/" + loc;
 }
 function loadFilm(url, dbData){
 	contentList = sortData(JSON.parse(dbData));
