@@ -193,6 +193,12 @@ function getUserFavourite(user_favourite)
 function getPage()
 {
 	let page = window.location.href.split("page/")[1] != (NaN || undefined) ? window.location.href.split("page/")[1] : 1;
+	if(page < 1){
+		window.location.href = window.location.href.split("page/")[0] + "page/1";
+	}
+	if(page > contentList.length / maxMainContentLength + 1){
+		window.location.href = window.location.href.split("page/")[0] + "page/" +Math.ceil(contentList.length / maxMainContentLength);
+	}
 	page = page <= 0 ? 1 : page;
 	mainContentShow = page*maxMainContentLength;
 	mainContentIndex = mainContentShow - maxMainContentLength;
@@ -232,29 +238,66 @@ function sortData(data)
 }
 function nextContent(){
 	var loc = window.location.href.split("/page/")[1] != (NaN || undefined) ? parseInt(window.location.href.split("page/")[1]) + 1 : 1;
-	window.location.href = window.location.href.split("/page/")[0] + "/page/" + loc;
+	if(window.location.href[window.location.href.length-1] != '/'){
+		window.location.href = window.location.href.split("/page/")[0] + "/page/" + loc;
+	}
+	else{
+		window.location.href = window.location.href.split("/page/")[0] + "page/" + loc;
+	}
 }
 function previousContent(){
 	var loc = window.location.href.split("/page/")[1] != (NaN || undefined) ? parseInt(window.location.href.split("page/")[1]) - 1 : 1;
-	window.location.href = window.location.href.split("/page/")[0] + "/page/" + loc;
+	if(window.location.href[window.location.href.length-1] != '/'){
+		window.location.href = window.location.href.split("/page/")[0] + "/page/" + loc;
+	}
+	else{
+		window.location.href = window.location.href.split("/page/")[0] + "page/" + loc;
+	}
 }
-function loadFilm(url, dbData){
+function checkFavourite(filmId, user_favourite)
+{
+	let favouriteList = getUserFavourite(user_favourite);
+	console.log(favouriteList)
+	for(var fav of favouriteList)
+	{
+		if(fav.id == filmId)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+function loadFilm(url, dbData, user_favourite){
 	contentList = sortData(JSON.parse(dbData));
 	loadSearchContent();
 	let video = document.getElementById("video");
 	let details = document.getElementById("details");
 	let filmId = url.split('watch/')[1];
+	let isFavourite = checkFavourite(filmId, user_favourite);
 	for(var content of contentList)
 	{
 		if(content.id == filmId)
-		{	
-			video.src = content.src;
-			details.innerHTML = `<h1 class="name film-name">${content.name}</h1>
+		{	if(!isFavourite)
+			{
+				video.src = content.src;
+				details.innerHTML = `<h1 class="name film-name">${content.name}</h1>
 					<form action="/fav" method="post" id="fav-form">
 						<input type="text" id="fav_film" name="fav_film" style="display: none;" value=${content.id}>
 						<button type="submit" class="fav-btn"><b>Theo dõi</b></button>
 					</form>
 					<p class="description">${content.description}</p>`;
+					console.log("theo dõi");
+			}
+			else
+			{
+				video.src = content.src;
+				details.innerHTML = `<h1 class="name film-name">${content.name}</h1>
+					<form action="/unfav" method="post" id="fav-form">
+						<input type="text" id="fav_film" name="fav_film" style="display: none;" value=${content.id}>
+						<button type="submit" class="fav-btn"><b>Bỏ theo dõi</b></button>
+					</form>
+					<p class="description">${content.description}</p>`;
+			}
 		}
 	}
 }
@@ -266,6 +309,7 @@ function loadTitle(text){
 function yearFilmContent(url, dbData){
 	contentList = sortData(JSON.parse(dbData));
 	let year = url.split('year/')[1];
+	year = year.split("page/")[0];
 	mainContentList = [];
 	for (var content of contentList)
 	{

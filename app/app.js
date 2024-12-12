@@ -161,7 +161,7 @@ app.post("/register", async (req, res) => {
       // If user already exists, return an error message
       if (result.rows.length > 0) {
         // If login fails, send an error message back to the EJS template
-        res.render("register.ejs", { errorMessage: "The username is already taken" });
+        return res.render("register.ejs", { errorMessage: "The username is already taken" });
       }
       const hashedPassword = await password/*bcrypt.hash(password, 10)*/;
       await client.query(
@@ -221,5 +221,37 @@ app.post("/fav", async (req, res) => {
   } catch (err) {
       console.error(err);
       res.status(500).send("Error");
+  }
+});
+//remove favourite film
+app.post("/unfav", async (req, res) => {
+  const { fav_film } = req.body;
+  try {
+    if (req.session.user) {
+      // Fetch the user's current 'favourite' field from the database
+      const result = await client.query('SELECT * FROM users WHERE id = $1', [req.session.user.id]);
+      let favourite = result.rows[0].favourite;
+
+      if (favourite.includes(`id=${fav_film}`)) {
+        // Remove the `fav_film` from the 'favourite' string
+        favourite = favourite.replace(`id=${fav_film}`, '');
+
+        // Clean up any extra commas or redundant separators
+        favourite = favourite.replace(/,,/g, ',');  // Remove double commas
+        favourite = favourite.replace(/^,|,$/g, '');  // Remove leading/trailing commas
+
+        // Update the user's 'favourite' in the database
+        await client.query(
+          `UPDATE users
+          SET favourite = $1
+          WHERE id = $2`,
+          [favourite, req.session.user.id]
+        );
+      }
+    }
+    res.redirect(req.get('referer')); // Redirect back to the previous page
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error removing favorite film");
   }
 });
