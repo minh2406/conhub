@@ -45,3 +45,67 @@
 	}
 }
 
+@media (max-width: 768px) {
+    /* Make the nav bar stack vertically */
+    .nav {
+        padding: 0 5%;
+    }
+
+    .nav li {
+        display: block;
+        width: 100%;
+        text-align: left;
+        padding: 10px 0;
+    }
+
+    .nav > li > a {
+        font-size: 16px;
+        margin-left: 10px;
+    }
+
+    /* Hide dropdown initially for mobile */
+    .dropdown {
+        position: static;
+        display: none;
+        background-color: #222222;
+        padding-left: 10px;
+    }
+
+    /* Toggle dropdown visibility */
+    .dropbox:hover .dropdown {
+        display: block;
+    }
+
+    /* Search box adjustments */
+    .search input[type="text"] {
+        width: 100%;
+        margin: 5px 0;
+    }
+
+    /* Adjust logo/banner size */
+    .banner {
+        height: 150px;
+    }
+}
+
+/* Mobile View for smaller screens */
+@media (max-width: 480px) {
+    .nav {
+        padding: 0 3%;
+    }
+
+    /* Make the search box smaller */
+    .search input[type="text"] {
+        width: 80%;
+        margin: 5px;
+    }
+
+    .nav li {
+        padding: 10px;
+    }
+
+    /* Make the banner height smaller */
+    .banner {
+        height: 120px;
+    }
+}
