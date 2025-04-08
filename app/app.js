@@ -167,7 +167,7 @@ app.post("/register", async (req, res) => {
         // If user already exists, return an error message
         return fetchAndRender(req, res, 'register.ejs', 'Đăng kí - Con hub', "Tên người dùng đã bị đăng kí");
       }
-      const hashedPassword = await password/*bcrypt.hash(password, 10)*/; //Phan /*  */ de ma hoa mat khau - da cancel
+      const hashedPassword = await password
       // Add user to database
       await client.query(
           "INSERT INTO users (name, password) VALUES ($1, $2)",
