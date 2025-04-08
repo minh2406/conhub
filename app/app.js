@@ -118,6 +118,9 @@ app.get("/favourite", (req, res) => {
 app.get("/favourite/*", (req, res) => {
   fetchAndRender(req, res, 'favourite.ejs', 'Phim yêu thích - Con hub');
 });
+app.get("/test", (req, res) => {
+  fetchAndRender(req, res, 'test.ejs', 'test - Con hub');
+});
 /*------------------------------------------------------------------------------------------------------*/
 app.listen(port); // Run web on port
 console.log("web is running");
@@ -127,12 +130,6 @@ app.use(express.urlencoded({ extended: true })); // Use web URL
 
 app.use(bodyParser.json()); // Su dung dinh dang JSON
 
-//Post film
-app.post('/submit', function (req, res) {
-  const { name, description, author, year, url, source } = req.body;
-  addData(filter(name), filter(description), filter(author), filter(year), filter(url), filter(source));
-  res.redirect('/submit');
-})
 //Filter special character
 function filter(data) {
   var filted = data;
@@ -272,4 +269,108 @@ app.get('/logout', (req, res) => {
       }
       res.redirect('/'); // Redirect the user to the homepage or login page
   });
+});
+
+
+// upload file
+const fs = require('fs');
+const { google }= require('googleapis');
+const multer = require('multer');
+
+const apikeys = require('./drive-api.json');
+const SCOPE = ['https://www.googleapis.com/auth/drive'];
+const upload = multer({ dest: 'uploads/' }); // Files will be stored in the 'uploads/' directory
+
+// Configure multer to handle multiple fields
+const uploadFields = upload.fields([
+  { name: 'url', maxCount: 1 },    // Handle the 'url' field (thumbnail)
+  { name: 'source', maxCount: 1 } // Handle the 'source' field (video)
+]);
+
+// A Function that can provide access to google drive api
+async function authorize(){
+  const jwtClient = new google.auth.JWT(
+      apikeys.client_email,
+      null,
+      apikeys.private_key,
+      SCOPE
+  );
+  await jwtClient.authorize();
+  return jwtClient;
+}
+// Function to upload a file to Google Drive
+async function uploadFile(authClient, fileName, filePath, mimeType) {
+  return new Promise((resolve, reject) => {
+      const drive = google.drive({ version: 'v3', auth: authClient });
+      const fileMetaData = {
+          name: fileName,
+          parents: ['1MObE-5Qs6DXk8ZWIqlHGHl93YYGqf4Ox'] // Replace with your Google Drive folder ID
+      };
+      const media = {
+          mimeType: mimeType,
+          body: fs.createReadStream(filePath)
+      };
+      drive.files.create(
+          {
+              resource: fileMetaData,
+              media: media,
+              fields: 'id, webViewLink, webContentLink' // Request file ID and links
+          },
+          (error, file) => {
+              if (error) {
+                  return reject(error);
+              }
+              resolve(file);
+          }
+      );
+  });
+}
+
+// Route to handle file upload and upload to Google Drive
+app.post('/submit', uploadFields, async (req, res) => {
+  try {
+      const { name, description, author, year } = req.body;
+
+      // Extract file details for the thumbnail
+      const img_file = req.files['url'][0];
+      const img_fileName = img_file.originalname;
+      const img_filePath = img_file.path;
+      const img_mimeType = img_file.mimetype;
+
+      // Extract file details for the video
+      const film_file = req.files['source'][0];
+      const film_fileName = film_file.originalname;
+      const film_filePath = film_file.path;
+      const film_mimeType = film_file.mimetype;
+
+      // Authorize Google Drive API
+      const authClient = await authorize();
+
+      // Upload the thumbnail to Google Drive
+      const imgResponse = await uploadFile(authClient, img_fileName, img_filePath, img_mimeType);
+
+      // Upload the video to Google Drive
+      const filmResponse = await uploadFile(authClient, film_fileName, film_filePath, film_mimeType);
+
+      // Delete the files from the server after uploading to Google Drive
+      fs.unlinkSync(img_filePath);
+      fs.unlinkSync(film_filePath);
+
+      // Generate embed links
+      const img_link = imgResponse.data.webContentLink.replace('/uc?', '/thumbnail?'); // Link to view the thumbnail
+      const film_embedLink = filmResponse.data.webViewLink.replace('/view?usp=drivesdk', '/preview'); // Embed link for the video
+      // Add the film data to the database
+      addData(filter(name), filter(description), filter(author), filter(year), img_link, film_embedLink);
+
+      // Redirect back to the previous page
+      res.redirect(req.get('referer'));
+  } catch (error) {
+      console.error('Error uploading file:', error);
+
+      // Send an error response
+      res.status(500).send({
+          message: 'Error uploading file',
+          error: error.message
+      });
+  }
 });
