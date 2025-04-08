@@ -178,7 +178,7 @@
 	  /*border: 3px outset #2d2d2d;
 	  border-radius: 3px;*/
 	  display: block;
-	  float: left;
+	  float: right;
 	  margin: 20px auto;
 	  overflow: auto;
   }

@@ -280,7 +280,7 @@ function sortData(data)
 // Load next page
 function nextContent(){
 	// Get current page
-	var loc = window.location.href.split("/page/")[1] != (NaN || undefined) ? parseInt(window.location.href.split("page/")[1]) + 1 : 1;
+	var loc = window.location.href.split("/page/")[1] != (NaN || undefined) ? parseInt(window.location.href.split("page/")[1]) + 1 : 1 + 1;
 	// Change page
 	// vd truong hop localhost/ va localhost/page/
 	if(window.location.href[window.location.href.length-1] != '/'){
@@ -419,6 +419,41 @@ function search()
         }
     }
 }
+//change to search page
+function searchPage()
+{
+	search = document.getElementById("search");
+	location.href = "/search/" + "value=" + search.value; 	
+}
+//searchpage
+function searchContent(url, dbData){
+	checkLogin();
+	contentList = sortData(JSON.parse(dbData));
+	//let year = url.split('year/')[1];
+	//year = year.split("/page/")[0];
+	mainContentList = [];
+	// Check year if right add to main content list
+	var input, filter, a, txtValue, idValue;
+    input = url;
+	console.log(input);
+	input = input.substring(
+		input.indexOf("value=") + 6, 
+		input.lastIndexOf("/page") != -1 ? input.lastIndexOf("/page") : input.lastIndexOf("")
+	);
+    filter = input.toUpperCase();
+    for (let i = 0; i < contentList.length; i++) {
+        var content = contentList[i];
+        txtValue = content.name;
+		idValue = "" + content.id;
+		console.log(idValue);
+        if (txtValue.toUpperCase().indexOf(filter) > -1 || idValue.toUpperCase().indexOf(filter) > -1) {
+            mainContentList.push(content); // Neu dung search
+		}
+    }
+	loadTitle(`Kết quả tìm kiếm của: ${input}` );
+	loadContent();
+	return;
+}
 //Search bat len khi click
 function searchOn(){
 	var searchContentList = document.getElementsByClassName("search-content");
@@ -448,27 +483,44 @@ function favouriteContent(dbData, user_favourite, user_name)
 	loadContent();
 	loadTitle(`Phim yêu thích`);
 }
-//preview form
-function thumnailPreview(){
-	const urlInput = document.getElementById('url').value;
-        const previewContainer = document.getElementById('thumbnail-preview');
-        const thumbnailImg = document.getElementById('thumbnail-img');
-        
-        if (urlInput) {
-            thumbnailImg.src = urlInput;  // Set image source
-            previewContainer.style.display = 'block';  // Show the image preview
+document.addEventListener('DOMContentLoaded', () => {
+    // Validate thumbnail file type
+    const thumbnailInput = document.getElementById('url');
+    const thumbnailFileName = document.getElementById('thumbnail-file-name');
+
+    thumbnailInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+            if (!allowedTypes.includes(file.type)) {
+                alert('File không hợp lệ. Vui lòng đăng tải file PNG, JPEG hoặc JPG.');
+                thumbnailInput.value = ''; // Clear the input
+                thumbnailFileName.textContent = '';
+                return;
+            }
+            thumbnailFileName.textContent = `Đã chọn: ${file.name}`;
         } else {
-            previewContainer.style.display = 'none';  // Hide the image preview if no URL
+            thumbnailFileName.textContent = '';
         }
-}
-function videoPreview(){
-	const sourceInput = document.getElementById('source').value;
-        const previewContainer = document.getElementById('source-preview');
-        const iframe = document.getElementById('source-iframe');
-        if (sourceInput) {
-			iframe.src = sourceInput;
-            previewContainer.style.display = 'block';  // Show the iframe preview
+    });
+
+    // Validate video file type
+    const videoInput = document.getElementById('source');
+    const videoFileName = document.getElementById('video-file-name');
+
+    videoInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const allowedTypes = ['video/mp4', 'video/mkv', 'video/avi'];
+            if (!allowedTypes.includes(file.type)) {
+                alert('File không hợp lệ. Vui lòng đăng tải file MP4, MKV hoặc AVI.');
+                videoInput.value = ''; // Clear the input
+                videoFileName.textContent = '';
+                return;
+            }
+            videoFileName.textContent = `Đã chọn: ${file.name}`;
         } else {
-            previewContainer.style.display = 'none';  // Hide the iframe preview if no URL
+            videoFileName.textContent = '';
         }
-}
+    });
+});
