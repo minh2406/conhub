@@ -425,34 +425,98 @@ function searchPage()
 	search = document.getElementById("search");
 	location.href = "/search/" + "value=" + search.value; 	
 }
-//searchpage
-function searchContent(url, dbData){
-	checkLogin();
-	contentList = sortData(JSON.parse(dbData));
-	//let year = url.split('year/')[1];
-	//year = year.split("/page/")[0];
-	mainContentList = [];
-	// Check year if right add to main content list
-	var input, filter, a, txtValue, idValue;
-    input = url;
-	console.log(input);
-	input = input.substring(
-		input.indexOf("value=") + 6, 
-		input.lastIndexOf("/page") != -1 ? input.lastIndexOf("/page") : input.lastIndexOf("")
-	);
-    filter = input.toUpperCase();
-    for (let i = 0; i < contentList.length; i++) {
-        var content = contentList[i];
-        txtValue = content.name;
-		idValue = "" + content.id;
-		console.log(idValue);
-        if (txtValue.toUpperCase().indexOf(filter) > -1 || idValue.toUpperCase().indexOf(filter) > -1) {
-            mainContentList.push(content); // Neu dung search
-		}
+//so sanh xau
+function compareStrings(a, b) {
+    // Split strings into words
+    const wordsA = a.split(' ');
+    const wordsB = b.split(' ');
+
+    let totalScore = 0;
+	let wordCount = 0;
+
+    // Compare each word in `a` with each word in `b`
+    for (const wordA of wordsA) {
+        let maxWordScore = 0;
+		wordCount++;
+
+        for (const wordB of wordsB) {
+            // Use dynamic programming to calculate the maximum score
+            const dp = Array(wordA.length + 1)
+                .fill(0)
+                .map(() => Array(wordB.length + 1).fill(0));
+			let maxCharacterScore = 0;
+            for (let i = 1; i <= wordA.length; i++) {
+                for (let j = 1; j <= wordB.length; j++) {
+                    if (wordA[i - 1] === wordB[j - 1]) {
+                        dp[i][j] = dp[i - 1][j - 1] + 1; // Characters match
+						maxCharacterScore = Math.max(maxCharacterScore, dp[i][j]);
+                    } else {
+                        dp[i][j] = Math.max(dp[i - 1][j], dp[i][j-1]); // Skip a character
+                    }
+                }
+            }
+            // Calculate the number of correct matches
+            const correct = maxCharacterScore;
+
+            // Calculate the number of wrong characters
+            const wrong = wordA.length - correct;
+
+            // Calculate the score for this word pair
+            let score = (correct) / wordA.length;
+			if(wrong >= correct) score = 0;
+
+            // Update the maximum score for this word in `wordsA`
+            maxWordScore = Math.max(maxWordScore, score);
+			// console.log(correct, wrong, score, maxWordScore);
+        }
+		if(maxWordScore <= 0.5) maxWordScore = 0;
+        // Add the maximum score for this word to the total score
+        totalScore += maxWordScore;
     }
-	loadTitle(`Kết quả tìm kiếm của: ${input}` );
-	loadContent();
-	return;
+	totalScore = totalScore / wordCount;
+    // if(totalScore <= 0.5) totalScore = 0;
+	return totalScore;
+}
+// console.log('a: ', compareStrings('thac dz 2', 'thac dz 2')); // test
+//searchpage
+function searchContent(url, dbData) {
+    checkLogin();
+    contentList = sortData(JSON.parse(dbData));
+    mainContentList = [];
+
+    // Extract the search value from the URL
+    let input = url.substring(
+        url.indexOf("value=") + 6,
+        url.lastIndexOf("/page") !== -1 ? url.lastIndexOf("/page") : url.length
+    );
+    input = decodeURIComponent(input);
+    console.log(input);
+
+    const filter = input.toUpperCase();
+    const scoredContent = [];
+
+    // Compare filter with each content name and calculate the score
+    for (let i = 0; i < contentList.length; i++) {
+        const content = contentList[i];
+        const txtValue = content.name.toUpperCase();
+        const score = compareStrings(txtValue, filter);
+
+        if (score > 0) {
+            scoredContent.push({ content, score }); // Add content and its score to the list
+        }
+    }
+
+    // Sort the scored content by score in descending order
+    scoredContent.sort((a, b) => b.score - a.score);
+
+    // Add the sorted content to the main content list
+    for (const item of scoredContent) {
+        mainContentList.push(item.content);
+    }
+
+    // Update the title and load the content
+    loadTitle(`Kết quả tìm kiếm của: ${input}`);
+    loadContent();
 }
 //Search bat len khi click
 function searchOn(){
