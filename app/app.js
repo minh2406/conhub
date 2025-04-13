@@ -45,6 +45,9 @@ app.use(async (req, res, next) => {
       const user = result.rows[0];
       req.session.user.name = user.name;
       req.session.user.favourite = user.favourite;
+      req.session.user.mod = user.mod;
+      req.session.user.avatar = user.avatar;
+      req.session.user.description = user.description;
     } catch (err) {
       console.error(err);
       // Handle error
@@ -81,7 +84,8 @@ function fetchAndRender(req, res, web, title, errMess) {
         unfilter: unfilter,
         unverifiedFilms: req.session.user ? unverifiedFilms : "",
         userUploads: req.session.user ? userUploads : "",
-        errorMessage: errMess ? errMess : ""
+        errorMessage: errMess ? errMess : "",
+        user_mod: req.session.user ? req.session.user.mod : false
       });
     } else {
       console.log(err.message);
@@ -107,12 +111,12 @@ app.get('/home/*', function (req, res) {
 app.get('/watch/*', function (req, res) {
   fetchAndRender(req, res, 'viewFilm.ejs', 'Xem phim - Con hub');
 });
-app.get('/year/(*)', function (req, res) {
-  fetchAndRender(req, res, 'yearFilter.ejs', 'Năm phát hành - Con hub'); 
-});
-app.get('/year/(*)/*', function (req, res) {
-  fetchAndRender(req, res, 'yearFilter.ejs', 'Năm phát hành - Con hub'); 
-});
+// app.get('/year/(*)', function (req, res) {
+//   fetchAndRender(req, res, 'yearFilter.ejs', 'Năm phát hành - Con hub'); 
+// });
+// app.get('/year/(*)/*', function (req, res) {
+//   fetchAndRender(req, res, 'yearFilter.ejs', 'Năm phát hành - Con hub'); 
+// });
 app.get('/submit', function (req, res) {
   fetchAndRender(req, res, 'filmSubmit.ejs', 'Đăng tải phim - Con hub');
 });
@@ -122,14 +126,95 @@ app.get("/register", (req, res) => {
 app.get("/login", (req, res) => {
   fetchAndRender(req, res, 'login.ejs', 'Đăng nhập - Con hub');
 });
-app.get("/favourite", (req, res) => {
-  fetchAndRender(req, res, 'favourite.ejs', 'Phim yêu thích - Con hub');
+app.get('/favourite', async (req, res) => {
+  if (!req.session.user) {
+      // Send an alert and redirect to the login page
+      return res.send(`
+          <script>
+              alert('Bạn cần đăng nhập để truy cập trang này.');
+              window.location.href = '/login';
+          </script>
+      `);
+  }
+
+  try {
+    fetchAndRender(req, res, 'favourite.ejs', 'Phim yêu thích - Con hub');
+  } catch (err) {
+      console.error('Error fetching favourite:', err);
+      res.status(500).send('Error fetching favourite');
+  }
 });
-app.get("/favourite/*", (req, res) => {
-  fetchAndRender(req, res, 'favourite.ejs', 'Phim yêu thích - Con hub');
+app.get('/favourite/*', async (req, res) => {
+  if (!req.session.user) {
+      // Send an alert and redirect to the login page
+      return res.send(`
+          <script>
+              alert('Bạn cần đăng nhập để truy cập trang này.');
+              window.location.href = '/login';
+          </script>
+      `);
+  }
+
+  try {
+    fetchAndRender(req, res, 'favourite.ejs', 'Phim yêu thích - Con hub');
+  } catch (err) {
+      console.error('Error fetching favourite:', err);
+      res.status(500).send('Error fetching favourite');
+  }
 });
 app.get("/test", (req, res) => {
   fetchAndRender(req, res, 'test.ejs', 'test - Con hub');
+});
+// app.get('/user', async (req, res) => {
+//   if (!req.session.user) {
+//       // Send an alert and redirect to the login page
+//       return res.send(`
+//           <script>
+//               alert('Bạn cần đăng nhập để truy cập trang này.');
+//               window.location.href = '/login';
+//           </script>
+//       `);
+//   }
+
+//   try {
+//     fetchAndRender(req, res, 'userInformation.ejs', 'Người dùng - Con hub');
+//   } catch (err) {
+//       console.error('Error fetching user:', err);
+//       res.status(500).send('Error fetching user');
+//   }
+// });
+app.get('/user', async (req, res) => {
+  fetchAndRender(req, res, 'userInformation.ejs', 'Người dùng - Con hub');
+});
+app.get('/user/:name', async (req, res) => {
+  const username = req.params.name;
+
+  try {
+      // Query the database for the user
+      const userResult = await client.query('SELECT * FROM users WHERE name = $1', [username]);
+      const user = userResult.rows[0];
+
+      if (!user) {
+          return res.status(404).send('User not found');
+      }
+
+      // Query the database for the user's videos
+      const videosResult = await client.query('SELECT * FROM films WHERE author = $1', [username]);
+      user.videos = videosResult.rows;
+
+      // Render the userInformation.ejs view with the user data
+      res.render('userInformation.ejs', {
+          user: user,
+          video: user.videos,
+          title: `${user.name} - Con hub`,
+          user_name: req.session.user ? req.session.user.name : "",
+          user_mod: req.session.user ? req.session.user.mod : false,
+          unfilter: unfilter,
+      });
+  } catch (err) {
+      console.error('Error fetching user:', err);
+      res.status(500).send('Error fetching user');
+  }
 });
 app.get('/form', (req, res) => {
   if (!req.session.user) {
@@ -426,7 +511,7 @@ app.get('/user-uploads', async (req, res) => {
       // Send an alert and redirect to the login page
       return res.send(`
           <script>
-              alert('You must be logged in to view this page.');
+              alert('Bạn cần đăng nhập để truy cập trang này.');
               window.location.href = '/login';
           </script>
       `);
@@ -462,8 +547,8 @@ app.get('/admin/verify-films', async (req, res) => {
   if (!req.session.user || req.session.user.mod !== true) {
       return res.send(`
           <script>
-              alert('You must be an admin to access this page.');
-              window.location.href = '/login';
+              alert('Cần có quyền admin để xem được trang này');
+              window.location.href = '/home';
           </script>
       `);
   }
@@ -492,5 +577,69 @@ app.post('/verify-film', async (req, res) => {
   } catch (err) {
       console.error('Error verifying film:', err);
       res.status(500).send('Error verifying film');
+  }
+});
+//user update information
+// Render the update user page
+app.get('/userUpdate', (req, res) => {
+  if (!req.session.user) {
+    return res.send(`
+      <script>
+          alert('Bạn cần đăng nhập để truy cập trang này.');
+          window.location.href = '/login';
+      </script>
+  `);
+  }
+
+  res.render('userUpdate.ejs', {
+    title: 'Thông tin tài khoản - Con hub',	
+    url: req.originalUrl, // Use req instead of require
+    user_name: req.session.user ? req.session.user.name : "",
+    user_favourite: req.session.user ? req.session.user.favourite : "",
+    unfilter: unfilter,
+    user_mod: req.session.user ? req.session.user.mod : false,
+    user: req.session.user, // Pass the current user data to the view
+  });
+});
+
+// Handle form submission
+app.post('/updateInfor', upload.single('avatar'), async (req, res) => {
+  const { name, description } = req.body;
+  let avatar = req.session.user.avatar; // Default to the current avatar
+
+  try {
+      if (req.file) {
+          // Authorize Google Drive API
+          const authClient = await authorize();
+
+          // Upload the avatar to Google Drive
+          const imgResponse = await uploadFile(authClient, req.file.originalname, req.file.path, req.file.mimetype);
+
+          // Get the public link for the avatar
+          avatar = imgResponse.data.webContentLink.replace('/uc?', '/thumbnail?');;
+
+          // Delete the file from the server after uploading
+          fs.unlinkSync(req.file.path);
+      }
+
+      // Update user in the database
+      await client.query(
+          'UPDATE users SET name = $1, description = $2, avatar = $3 WHERE id = $4',
+          [name, description, avatar, req.session.user.id]
+      );
+      // Update the author field in the films table
+      await client.query(
+        'UPDATE films SET author = $1 WHERE author = $2',
+        [name, req.session.user.name]
+      );
+      // Update session data
+      req.session.user.name = name;
+      req.session.user.description = description;
+      req.session.user.avatar = avatar;
+
+      res.redirect(`/user/${req.session.user.name}`); // Redirect to the user's profile page
+  } catch (err) {
+      console.error('Error updating user:', err);
+      res.status(500).send('Error updating user');
   }
 });

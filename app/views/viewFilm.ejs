@@ -29,20 +29,17 @@
 				<b>Thời gian tải lên:</b>
 				<span id="film-upload-time"></span>
 			</p>
+			<p class="author">
+				<b>Tác giả:</b>
+				<a href="/user/<%= user_name %>" class="author-link" id = "author-name"><%= user_name %></a>
+			</p>
 			<p class="description" id="film-description"></p>
 			<!-- Download Button -->
 			<a id="download-btn" href="#" class="download-btn" download><b>Tải phim</b></a>
 		</div>
 		<hr>
 	</main>
-    <footer>
-		<div class="about" id="about">
-			<p>Conluong - 2024</p>
-		</div>
-		<div class="contact">
-			<p>Contact: <a href="#">Conluong@gmail.com</a></p>
-		</div>
-    </footer>
+    <%- include('footer.ejs') %>
 	<!-- FLOAT BUTTON -->  
 	<a href="/home" class="float">
         <i class="fa fa-home my-float"></i>

@@ -1,4 +1,4 @@
-let maxMainContentLength = 6; // How many content to show in main
+let maxMainContentLength = 8; // How many content to show in main
 let mainContentShow = maxMainContentLength; // Show content to
 let mainContentIndex = 0; // Show content from
 let subContentShow = 6; // How many content to show in sub
@@ -147,6 +147,18 @@ function clearContent()
 // Load main Film
 function loadMainContent(){
 	let mainContent = document.getElementById("main-content");
+	mainContent.innerHTML = '<h1 class="title">Phim mới</h1>';
+	for (let i = 1; i <= maxMainContentLength && i <= mainContentShow - mainContentIndex; i++){
+		mainContent.innerHTML += `<span class="content">
+				<a class="img-container" href="/watch#1"><img src="https://i.ytimg.com/vi/C7OQHIpDlvA/maxresdefault.jpg"
+						class="content-img"></a>
+				<a class="name" href="/watch#1">The Wait</a>
+			</span>`;
+	}
+	mainContent.innerHTML += `<div class="button-container">
+				<button class="previousButton" id="previousButton" onclick="previousContent()">Trước</button>
+				<button class="nextButton" id="nextButton" onclick="nextContent()">Sau</button>
+			</div>`;
 	for (let i = mainContentIndex; i < mainContentShow; i++){
 		// Get page content
 		let contentContainer = mainContent.getElementsByClassName("content");
@@ -162,28 +174,28 @@ function loadMainContent(){
 	}
 }
 // Load sub Film
-function loadSubContent(){
-	let subContent = document.getElementById("sub-content");
-	if(subContent) // If sub content exist
-	{
-		for (let i = subContentIndex; i < subContentShow && i < subContentList.length; i++){
-			// Get page content
-			let contentContainer = subContent.getElementsByClassName("content");
-			let imgContainer = contentContainer[i].getElementsByClassName("img-container");
-			let contentImg = contentContainer[i].getElementsByClassName("content-img");
-			let contentName = contentContainer[i].getElementsByClassName("name");
-			let author = contentContainer[i].getElementsByClassName("description");
-			// Load page content
-			contentContainer[i].style.display = "block";
-			imgContainer[0].href = `/watch/${subContentList[i].id}`;
-			contentImg[0].src = subContentList[i].img;
-			contentName[0].href = `/watch/${subContentList[i].id}`;
-			contentName[0].innerText = subContentList[i].name;
-			author[0].innerText = subContentList[i].author;
-		}
-	}
+// function loadSubContent(){
+// 	let subContent = document.getElementById("sub-content");
+// 	if(subContent) // If sub content exist
+// 	{
+// 		for (let i = subContentIndex; i < subContentShow && i < subContentList.length; i++){
+// 			// Get page content
+// 			let contentContainer = subContent.getElementsByClassName("content");
+// 			let imgContainer = contentContainer[i].getElementsByClassName("img-container");
+// 			let contentImg = contentContainer[i].getElementsByClassName("content-img");
+// 			let contentName = contentContainer[i].getElementsByClassName("name");
+// 			let author = contentContainer[i].getElementsByClassName("description");
+// 			// Load page content
+// 			contentContainer[i].style.display = "block";
+// 			imgContainer[0].href = `/watch/${subContentList[i].id}`;
+// 			contentImg[0].src = subContentList[i].img;
+// 			contentName[0].href = `/watch/${subContentList[i].id}`;
+// 			contentName[0].innerText = subContentList[i].name;
+// 			author[0].innerText = subContentList[i].author;
+// 		}
+// 	}
 	
-}
+// }
 // Turn database infor to list
 function getUserFavourite(user_favourite)
 {
@@ -340,6 +352,7 @@ function loadFilm(url, dbData, user_favourite) {
     let fav_btn = document.getElementById("fav-btn");
     let filmForm = document.getElementById("fav-form");
     let isFavourite = checkFavourite(filmId, user_favourite); // check if favourited
+	let authorName = document.getElementById("author-name");
 
     // load film base on id
     for (var content of contentList) {
@@ -357,12 +370,16 @@ function loadFilm(url, dbData, user_favourite) {
                 fav_film.value = content.id;
                 filmForm.action = "/fav";
                 fav_btn.innerText = "Thích";
+				authorName.innerText = content.author;
+				authorName.href = `/user/${content.author}`;
             } else {
                 filmName.innerText = content.name;
                 filmDescription.innerText = content.description;
                 fav_film.value = content.id;
                 filmForm.action = "/unfav";
                 fav_btn.innerText = "Bỏ thích";
+				authorName.innerText = content.author;
+				authorName.href = `/user/${content.author}`;
             }
         }
     }
@@ -551,8 +568,8 @@ function searchOff(){
 	setTimeout(focusOff, 200);
 }
 // favourite content
-function favouriteContent(dbData, user_favourite, user_name) {
-    // checkLogin();
+function favouriteContent(dbData, user_favourite) {
+    checkLogin();
     // checkSub(user_name);
     // Parse and filter verified films
     contentList = sortData(JSON.parse(dbData)).filter(film => film.verified === "true");

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        .update-user-page {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+            border: 1px solid #1f1f1f;
+            border-radius: 8px;
+            background-color: #2f2f2f;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    
+        .update-user-page h1 {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #eee;
+        }
+    
+        .update-user-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #eee;
+        }
+    
+        .update-user-form input,
+        .update-user-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            background-color: #fff;
+            transition: border-color 0.3s ease;
+            color: #1f1f1f;
+        }
+    
+        .update-user-form input:focus,
+        .update-user-form textarea:focus {
+            border-color: #FF8A00;
+            outline: none;
+            background-color: #f9f9f9;
+        }
+    
+        .update-user-form .avatar-preview {
+            display: block;
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            margin: 10px auto 16px;
+            border-radius: 16px;
+            border: 2px solid #ddd;
+        }
+    
+        .update-user-form .update-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #FF8A00;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+    
+        .update-user-form .update-btn:hover {
+            background-color: #FF6600;
+        }
+    
+        .update-user-form .update-btn:active {
+            background-color: #FF4400;
+        }
+    </style>
+</head>
+<body onload="loadPage()">
+    <script type="text/javascript" src="/responsive.js"></script>
+	<script type="text/javascript" src="/main.js"></script>
+    <%- include('header') %>
+    <main class="update-user-page">
+        <h1>Cập nhật thông tin cá nhân</h1>
+        <form action="/updateInfor" method="POST" enctype="multipart/form-data" class="update-user-form">
+            <!-- Avatar -->
+            <label for="avatar">Ảnh đại diện:</label>
+            <input type="file" id="avatar" name="avatar" accept="image/*">
+            <img id="avatar-preview" src="<%= user.avatar %>" alt="Avatar Preview" class="avatar-preview">
+
+            <!-- Name -->
+            <label for="name">Tên người dùng:</label>
+            <input type="text" id="name" name="name" value="<%= user.name %>" required>
+
+            <!-- Description -->
+            <label for="description">Mô tả:</label>
+            <textarea id="description" name="description" rows="4" required><%= user.description %></textarea>
+
+            <!-- Submit Button -->
+            <button type="submit" class="update-btn">Cập nhật</button>
+        </form>
+    </main>
+    <%- include('footer.ejs') %>
+    <script>
+        // Preview avatar before upload
+        const avatarInput = document.getElementById('avatar');
+        const avatarPreview = document.getElementById('avatar-preview');
+        avatarInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                avatarPreview.src = URL.createObjectURL(file);
+            }
+        });
+    </script>
+</body>
+</html>

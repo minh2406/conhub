@@ -5,8 +5,11 @@
 				<button onclick="w3_close()" class="w3-bar-item w3-large">Close
 					&times;</button>
 				<a href="/home" class="w3-bar-item w3-button">Trang chủ</a>
-				<a href="/admin/verify-films" class="w3-bar-item w3-button">Kiểm duyệt phim</a>
+				<% if (user_mod) { %>
+					<a href="/admin/verify-films" class="w3-bar-item w3-button">Kiểm duyệt phim</a>
+				<% } %>
 				<a href="/user-uploads" class="w3-bar-item w3-button">Người dùng</a>
+				<a href="/favourite" class="w3-bar-item w3-button">Yêu thích</a>
 			</div>
 			<div class="w3-teal">
 				<button id="menuButton" class="w3-button w3-teal w3-xlarge" style="background-color: #111111;"
@@ -23,11 +26,11 @@
 			</div>
 			<div class="navbar-right">
 				<div class="user-section">
-					<a href="/user-uploads" id="user_name" class="user-name"><i class="fa fa-user"></i> <%= user_name %></a>
+					<a href="/user/<%= user_name %>" id="user_name" class="user-name"><i class="fa fa-user"></i> <%= user_name %></a>
 					<a href="/login" id="login" class="login-btn">Đăng nhập</a>
 					<a href="/logout" id="logout" class="login-btn">Đăng xuất</a>
 				</div>
 			</div>
 		</div>
-		<img src="banner.png" class="banner">
+		<img src="/banner.png" class="banner">
 	</header>
