@@ -131,7 +131,7 @@ function loadContent() {
 	/*load main content*/
 	loadMainContent();
 	/*load sub content*/
-	loadSubContent();
+	// loadSubContent();
 	/*load search content*/
 	loadSearchContent();
 }
@@ -226,14 +226,20 @@ function getPage()
 	}
 	console.log(page, mainContentIndex, mainContentShow);
 }
+
 // Check login
 function checkLogin()
 {
 	let username = document.getElementById("user_name");
 	let login = document.getElementById("login");
+	let logout = document.getElementById("logout");
 	if(username.innerText != "")
 	{
 		login.style.display = "none";
+	}
+	else
+	{
+		logout.style.display = "none";
 	}
 }
 //check sub content
@@ -246,22 +252,21 @@ function checkSub(user_name)
 	}
 }
 // Load index
-function mainPageContentLoad(dbData, user_favourite, user_name)
-{
-	checkLogin();
-	contentList = sortData(JSON.parse(dbData)); // Sort theo phim moi
-	console.log(contentList);
-	mainContentList = contentList; // Truyen gia tri cho main content
-	subContentList = getUserFavourite(user_favourite); // Truyen gia tri cho sub content
-	checkSub(user_name);
-	loadContent(); // Load content
-	return;
+function mainPageContentLoad(dbData) {
+    checkLogin();
+    // Parse and filter verified films
+    contentList = sortData(JSON.parse(dbData)).filter(film => film.verified === "true");
+    console.log(contentList);
+    mainContentList = contentList; // Assign verified films to main content
+    // checkSub(user_name);
+    loadContent(); // Load content
+    return;
 }
-function subPageContentLoad(dbData, user_favourite)
-{
-	checkLogin();
-	contentList = sortData(JSON.parse(dbData));
-	loadSearchContent();
+function subPageContentLoad(dbData) {
+    checkLogin();
+    // Parse and filter verified films
+    contentList = sortData(JSON.parse(dbData)).filter(film => film.verified === "true");
+    loadSearchContent(); // Load search content
 }
 // Sort id from high to low
 function sortData(data)
@@ -318,47 +323,49 @@ function checkFavourite(filmId, user_favourite)
 	return false;
 }
 //Load film
-function loadFilm(url, dbData, user_favourite){
-	checkLogin();
-	// Get data
-	contentList = sortData(JSON.parse(dbData));
-	// Load search content
-	loadSearchContent();
-	// Get page content
-	let video = document.getElementById("video");
-	let details = document.getElementById("details");
-	let filmId = url.split('watch/')[1];
-	let isFavourite = checkFavourite(filmId, user_favourite); // check if favourited
-	// load film base on id
-	for(var content of contentList)
-	{
-		if(content.id == filmId)
-		{	
-			// Khong favourited
-			if(!isFavourite)
-			{
-				video.src = content.src;
-				details.innerHTML = `<h1 class="name film-name">${content.name}</h1>
-					<form action="/fav" method="post" id="fav-form">
-						<input type="text" id="fav_film" name="fav_film" style="display: none;" value=${content.id}>
-						<button type="submit" class="fav-btn"><b>Theo dõi</b></button>
-					</form>
-					<p class="description">${content.description}</p>`;
-					console.log("theo dõi");
-			}
-			// Favourited
-			else
-			{
-				video.src = content.src;
-				details.innerHTML = `<h1 class="name film-name">${content.name}</h1>
-					<form action="/unfav" method="post" id="fav-form">
-						<input type="text" id="fav_film" name="fav_film" style="display: none;" value=${content.id}>
-						<button type="submit" class="fav-btn"><b>Bỏ theo dõi</b></button>
-					</form>
-					<p class="description">${content.description}</p>`;
-			}
-		}
-	}
+function loadFilm(url, dbData, user_favourite) {
+    checkLogin();
+    // Get data
+    contentList = sortData(JSON.parse(dbData));
+    // Load search content
+    loadSearchContent();
+    // Get page content
+    let video = document.getElementById("video");
+    let filmName = document.getElementById("film-name");
+    let filmDescription = document.getElementById("film-description");
+    let uploadTime = document.getElementById("film-upload-time");
+    let downloadBtn = document.getElementById("download-btn");
+    let filmId = url.split('watch/')[1];
+    let fav_film = document.getElementById("fav_film");
+    let fav_btn = document.getElementById("fav-btn");
+    let filmForm = document.getElementById("fav-form");
+    let isFavourite = checkFavourite(filmId, user_favourite); // check if favourited
+
+    // load film base on id
+    for (var content of contentList) {
+        if (content.id == filmId) {
+            // Set video source
+            video.src = content.src;
+            // Set download link
+            // downloadBtn.onclick = `location.href = "content.download"`;
+            // Set upload time
+            uploadTime.innerText = new Date(content.time).toLocaleString('vi-VN', { dateStyle: 'medium', timeStyle: 'short' });
+            // Update details
+            if (!isFavourite) {
+                filmName.innerText = content.name;
+                filmDescription.innerText = content.description;
+                fav_film.value = content.id;
+                filmForm.action = "/fav";
+                fav_btn.innerText = "Thích";
+            } else {
+                filmName.innerText = content.name;
+                filmDescription.innerText = content.description;
+                fav_film.value = content.id;
+                filmForm.action = "/unfav";
+                fav_btn.innerText = "Bỏ thích";
+            }
+        }
+    }
 }
 // Load Title main content
 function loadTitle(text){
@@ -367,28 +374,28 @@ function loadTitle(text){
 	title[0].innerText = text;
 }
 // Load year page
-function yearFilmContent(url, dbData){
-	checkLogin();
-	contentList = sortData(JSON.parse(dbData));
-	let year = url.split('year/')[1];
-	year = year.split("/page/")[0];
-	mainContentList = [];
-	// Check year if right add to main content list
-	for (var content of contentList)
-	{
-		if(content.year == year)
-		{
-			mainContentList.push(content);
-		}
-	}
-	if(maxMainContentLength > mainContentList.length)
-	{
-		mainContentShow = mainContentList.length;
-	}
-	loadTitle(`Phim năm ${year}`);
-	loadContent();
-	return;
-}
+// function yearFilmContent(url, dbData){
+// 	checkLogin();
+// 	contentList = sortData(JSON.parse(dbData));
+// 	let year = url.split('year/')[1];
+// 	year = year.split("/page/")[0];
+// 	mainContentList = [];
+// 	// Check year if right add to main content list
+// 	for (var content of contentList)
+// 	{
+// 		if(content.year == year)
+// 		{
+// 			mainContentList.push(content);
+// 		}
+// 	}
+// 	if(maxMainContentLength > mainContentList.length)
+// 	{
+// 		mainContentShow = mainContentList.length;
+// 	}
+// 	loadTitle(`Phim năm ${year}`);
+// 	loadContent();
+// 	return;
+// }
 //Load search content
 function loadSearchContent()
 {
@@ -404,7 +411,8 @@ function loadSearchContent()
 //Search
 function search()
 {
-	var input, filter, a, txtValue, searchContentList;
+	var input, filter, a, txtValue, searchContentList, searchContainer;
+	searchContainer = document.getElementById("search-container");
     input = document.getElementById("search");
     filter = input.value.toUpperCase();
     searchContentList = document.getElementsByClassName("search-content");
@@ -467,13 +475,14 @@ function compareStrings(a, b) {
 
             // Update the maximum score for this word in `wordsA`
             maxWordScore = Math.max(maxWordScore, score);
-			// console.log(correct, wrong, score, maxWordScore);
-        }
+			//console.log(correct, wrong, score, maxWordScore);
+        }	
 		if(maxWordScore <= 0.5) maxWordScore = 0;
         // Add the maximum score for this word to the total score
         totalScore += maxWordScore;
     }
 	totalScore = totalScore / wordCount;
+	//console.log("a: ", a, "b: ", b, "score: ", totalScore);
     // if(totalScore <= 0.5) totalScore = 0;
 	return totalScore;
 }
@@ -499,7 +508,7 @@ function searchContent(url, dbData) {
     for (let i = 0; i < contentList.length; i++) {
         const content = contentList[i];
         const txtValue = content.name.toUpperCase();
-        const score = compareStrings(txtValue, filter);
+        const score = compareStrings(filter, txtValue); // Calculate the score
 
         if (score > 0) {
             scoredContent.push({ content, score }); // Add content and its score to the list
@@ -521,31 +530,36 @@ function searchContent(url, dbData) {
 //Search bat len khi click
 function searchOn(){
 	var searchContentList = document.getElementsByClassName("search-content");
+	var searchContainer = document.getElementById("search-container");
 	for (let i = 0; i < searchContentList.length; i++) {
         searchContentList[i].style.display = "block";
+		searchContainer.style.display = "block";
     }
 }
+
 //Search tat khi click ra
 function focusOff()
 {
 	var searchContentList = document.getElementsByClassName("search-content");
+	var searchContainer = document.getElementById("search-container");
 	for (let i = 0; i < searchContentList.length; i++) {
         searchContentList[i].style.display = "none";
+		searchContainer.style.display = "none";
     }
 }
 function searchOff(){
 	setTimeout(focusOff, 200);
 }
 // favourite content
-function favouriteContent(dbData, user_favourite, user_name)
-{
-	checkLogin();
-	checkSub(user_name);
-	contentList = sortData(JSON.parse(dbData));
-	subContentList = getUserFavourite(user_favourite);
-	mainContentList = subContentList;
-	loadContent();
-	loadTitle(`Phim yêu thích`);
+function favouriteContent(dbData, user_favourite, user_name) {
+    // checkLogin();
+    // checkSub(user_name);
+    // Parse and filter verified films
+    contentList = sortData(JSON.parse(dbData)).filter(film => film.verified === "true");
+    subContentList = getUserFavourite(user_favourite); // Assign user favorites
+    mainContentList = subContentList; // Assign to main content
+    loadContent(); // Load content
+    loadTitle(`Phim yêu thích`);
 }
 document.addEventListener('DOMContentLoaded', () => {
     // Validate thumbnail file type
@@ -588,3 +602,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+// Get time when submit film
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('film-upload-form');
+    const uploadTimeInput = document.getElementById('upload-time');
+
+    form.addEventListener('submit', () => {
+        const now = new Date();
+        const formattedTime = now.toISOString(); // Format as ISO string (e.g., "2025-04-13T12:34:56.789Z")
+        uploadTimeInput.value = formattedTime;
+        console.log(`Upload time set to: ${formattedTime}`);
+    });
+});
+/* side bar*/
+function w3_open() {
+	document.getElementById("mySidebar").style.display = "block";
+	document.getElementById("menuButton").style.display = "none";
+
+}
+
+function w3_close() {
+	document.getElementById("mySidebar").style.display = "none";
+	document.getElementById("menuButton").style.display = "block";
+}
+function loadPage()
+{
+	checkLogin();
+    loadSearchContent();
+}

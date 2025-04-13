@@ -5,6 +5,7 @@ var app = express();
 var port = 8080;
 
 app.set('views', __dirname + '/views');// Dat duong dan file
+app.use(express.static('public'));
 app.use(express.static(__dirname + '/views'));// Dat duong dan file
 var bodyParser = require('body-parser');
 //dotenv
@@ -56,21 +57,33 @@ app.use(async (req, res, next) => {
 });
 client.connect(); // Connect to database
 // Get database infor and render web
-function fetchAndRender(require, result, web, title, errMess) 
-{
-  client.query('Select * from films', (err, res) => {
+function fetchAndRender(req, res, web, title, errMess) {
+  client.query('SELECT * FROM films', async (err, result) => {
     if (!err) {
-      let fetchData = res.rows;
-        result.render(web, {
+      let unverifiedFilms = "";
+      let userUploads = "";
+      let fetchData = result.rows;
+      if(req.session.user) {
+        const unverified = await client.query("SELECT * FROM films WHERE verified = 'false'");
+        unverifiedFilms = unverified.rows;
+        const userFilms = await client.query(
+          'SELECT * FROM films WHERE author = $1',
+          [req.session.user.name] // Use req instead of require
+        );
+        userUploads = userFilms.rows;
+      }
+      res.render(web, {
         title: title,
-        url: require.originalUrl,
+        url: req.originalUrl, // Use req instead of require
         dbData: fetchData,
-        user_name: require.session.user ? require.session.user.name : "",
-        user_favourite: require.session.user ? require.session.user.favourite : "",
+        user_name: req.session.user ? req.session.user.name : "",
+        user_favourite: req.session.user ? req.session.user.favourite : "",
+        unfilter: unfilter,
+        unverifiedFilms: req.session.user ? unverifiedFilms : "",
+        userUploads: req.session.user ? userUploads : "",
         errorMessage: errMess ? errMess : ""
       });
-    }
-    else {
+    } else {
       console.log(err.message);
     }
   });
@@ -100,9 +113,6 @@ app.get('/year/(*)', function (req, res) {
 app.get('/year/(*)/*', function (req, res) {
   fetchAndRender(req, res, 'yearFilter.ejs', 'Năm phát hành - Con hub'); 
 });
-app.get('/form', function (req, res) {
-  fetchAndRender(req, res, 'form.ejs', 'Đăng tải phim - Con hub');
-});
 app.get('/submit', function (req, res) {
   fetchAndRender(req, res, 'filmSubmit.ejs', 'Đăng tải phim - Con hub');
 });
@@ -121,6 +131,20 @@ app.get("/favourite/*", (req, res) => {
 app.get("/test", (req, res) => {
   fetchAndRender(req, res, 'test.ejs', 'test - Con hub');
 });
+app.get('/form', (req, res) => {
+  if (!req.session.user) {
+      // Redirect to login if the user is not logged in
+      return res.send(`
+          <script>
+              alert('You must be logged in to upload a film.');
+              window.location.href = '/login';
+          </script>
+      `);
+  }
+
+  // Render the upload film page
+  fetchAndRender(req, res, 'form.ejs', 'Đăng tải phim - Con hub');
+});
 /*------------------------------------------------------------------------------------------------------*/
 app.listen(port); // Run web on port
 console.log("web is running");
@@ -132,21 +156,35 @@ app.use(bodyParser.json()); // Su dung dinh dang JSON
 
 //Filter special character
 function filter(data) {
-  var filted = data;
-  filted = filted.replace(/"/g, '\\"');
-  filted = filted.replace(/\r\n/g, '<br>');
+  let filted = data;
+  filted = filted.replace(/'/g, "\\'"); // Escape single quotes
+  filted = filted.replace(/"/g, '\\"'); // Escape double quotes
+  filted = filted.replace(/`/g, '\\`'); // Escape backticks
+  filted = filted.replace(/\r\n/g, '<br>'); // Replace newlines with <br>
+  filted = filted.replace(/\n/g, '<br>'); // Handle other newline cases
   return filted;
 }
+// unfilter data
+function unfilter(data) {
+  let unfilted = data;
+  unfilted = unfilted.replace(/\\'/g, "'"); // Unescape single quotes
+  unfilted = unfilted.replace(/\\"/g, '"'); // Unescape double quotes
+  unfilted = unfilted.replace(/\\`/g, '`'); // Unescape backticks
+  unfilted = unfilted.replace(/<br>/g, '\n'); // Replace <br> with newlines
+  return unfilted;
+}
 //Add film to database
-function addData(name, description, author, year, url, source) {
-  console.log(name, "\n", `"${description}"`, "\n", author, "\n", year, "\n", url, "\n", source);
-  client.query(`INSERT INTO films (name, description, author, year, img, src)
+function addData(name, description, author, url, source, verified, download, time) {
+  console.log(name, "\n", `"${description}"`, "\n", author, "\n", url, "\n", source, "\n", verified, "\n", download, "\n", time);
+  client.query(`INSERT INTO films (name, description, author, img, src, verified, download, time)
   VALUES ($$${name}$$,
       $$${description}$$,
       $$${author}$$,
-      ${year},
       $$${url}$$,
-      $$${source}$$);`, (err, res) => {
+      $$${source}$$,
+      $$${verified}$$,
+      $$${download}$$,
+      $$${time}$$);`, (err, res) => {
     if (!err) {
       console.log(res.rows);
     }
@@ -192,7 +230,8 @@ app.post("/login", async (req, res) => {
         req.session.user = {
           id: user.id,
           name: user.name,
-          favourite: user.favourite
+          favourite: user.favourite,
+          mod: user.mod
       };
 
       return res.redirect("/home"); // Login success - go to home page
@@ -329,7 +368,13 @@ async function uploadFile(authClient, fileName, filePath, mimeType) {
 // Route to handle file upload and upload to Google Drive
 app.post('/submit', uploadFields, async (req, res) => {
   try {
-      const { name, description, author, year } = req.body;
+      const { name, description, author, time } = req.body;
+
+      if (!time) {
+        console.log('Upload Time:', time); // Log the upload time
+        throw new Error('Upload time is missing');
+    }
+    
 
       // Extract file details for the thumbnail
       const img_file = req.files['url'][0];
@@ -359,8 +404,9 @@ app.post('/submit', uploadFields, async (req, res) => {
       // Generate embed links
       const img_link = imgResponse.data.webContentLink.replace('/uc?', '/thumbnail?'); // Link to view the thumbnail
       const film_embedLink = filmResponse.data.webViewLink.replace('/view?usp=drivesdk', '/preview'); // Embed link for the video
+      const film_downloadLink = filmResponse.data.webContentLink; // Link to download the video
       // Add the film data to the database
-      addData(filter(name), filter(description), filter(author), filter(year), img_link, film_embedLink);
+      addData(filter(name), filter(description), filter(author), img_link, film_embedLink, false, film_downloadLink, time);
 
       // Redirect back to the previous page
       res.redirect(req.get('referer'));
@@ -372,5 +418,79 @@ app.post('/submit', uploadFields, async (req, res) => {
           message: 'Error uploading file',
           error: error.message
       });
+  }
+});
+//test
+app.get('/user-uploads', async (req, res) => {
+  if (!req.session.user) {
+      // Send an alert and redirect to the login page
+      return res.send(`
+          <script>
+              alert('You must be logged in to view this page.');
+              window.location.href = '/login';
+          </script>
+      `);
+  }
+
+  try {
+      fetchAndRender(req, res, 'userUploads.ejs', 'Your Uploaded Films - Con hub');
+  } catch (err) {
+      console.error('Error fetching user uploads:', err);
+      res.status(500).send('Error fetching user uploads');
+  }
+});
+//delete film
+app.post('/delete-film', async (req, res) => {
+  const { filmId, reason } = req.body;
+
+  try {
+      // Update the film status to "Deleted" and set the reason
+      await client.query(
+          'UPDATE films SET verified = $1, note = $2 WHERE id = $3',
+          ['deleted', filter(reason), filmId]
+      );
+
+      // Redirect back to the previous page
+      res.redirect(req.get('referer'));
+  } catch (err) {
+      console.error('Error deleting film:', err);
+      res.status(500).send('Error deleting film');
+  }
+});
+//verify film
+app.get('/admin/verify-films', async (req, res) => {
+  if (!req.session.user || req.session.user.mod !== true) {
+      return res.send(`
+          <script>
+              alert('You must be an admin to access this page.');
+              window.location.href = '/login';
+          </script>
+      `);
+  }
+
+  try {
+      fetchAndRender(req, res, 'verifyFilms.ejs', 'Admin - Verify Films');
+  } catch (err) {
+      console.error('Error fetching films:', err);
+      res.status(500).send('Error fetching films');
+  }
+});
+//verify film	
+app.post('/verify-film', async (req, res) => {
+  const { filmId } = req.body;
+
+  if (!req.session.user || req.session.user.mod !== true) {
+      return res.status(403).send('You are not authorized to verify films.');
+  }
+
+  try {
+      // Update the film's status to "verified"
+      await client.query("UPDATE films SET verified = 'true' WHERE id = $1", [filmId]);
+
+      // Redirect back to the admin verification page
+      res.redirect('/admin/verify-films');
+  } catch (err) {
+      console.error('Error verifying film:', err);
+      res.status(500).send('Error verifying film');
   }
 });

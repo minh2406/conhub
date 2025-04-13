@@ -9,53 +9,10 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
-<body onload="favouriteContent(`<%=JSON.stringify(dbData)%>`, '<%= user_favourite %>', '<%= user_name %>')">
+<body onload="favouriteContent(`<%=unfilter(JSON.stringify(dbData))%>`, '<%= user_favourite %>', '<%= user_name %>')">
 	<script type="text/javascript" src="/responsive.js"></script>
 	<script type="text/javascript" src="/main.js"></script>
-    <header>
-		<ul class ="nav">
-			<li><a href="/home">Trang chủ</a></li>
-			<li><a href="#about">Thông tin</a></li>
-			<li class="dropbox">
-				<a href="#">Năm phát hành</a>
-                <ul class="dropdown">
-					<div class="dropdown-row"> 
-						<li><a href="/year/2014">2014</a></li>
-						<li><a href="/year/2015">2015</a></li>
-						<li><a href="/year/2016">2016</a></li>
-					</div>
-					<div class="dropdown-row"> 
-						<li><a href="/year/2017">2017</a></li>
-						<li><a href="/year/2018">2018</a></li>
-						<li><a href="/year/2019">2019</a></li>
-					</div>
-					<div class="dropdown-row"> 
-						<li><a href="/year/2020">2020</a></li>
-						<li><a href="/year/2021">2021</a></li>
-						<li><a href="/year/2022">2022</a></li>
-					</div>
-					<div class="dropdown-row"> 
-						<li><a href="/year/2023">2023</a></li>
-						<li><a href="/year/2024">2024</a></li>
-					</div>
-				</ul>
-			</li>
-			<li><a href="/form">Thêm phim</a></li>
-			<li class="search">
-				<input type="text" id ="search" placeholder="Tìm tên phim" class="search-box" onkeyup="search()" onfocus="searchOn()" onfocusout="searchOff()" autocomplete="off">
-				<ul id = "search-container">
-				</ul>
-			</li>
-			<li class="login" id = "login"><a href="/login">Đăng nhập</a></li>
-			<li class="username" id="username">
-				<a href="#" id="user_name"><%= user_name %></a>
-				<ul class="dropdown-logout">
-					<li><a href="/logout" id="logoutButton">Đăng xuất</a></li>
-				</ul>
-			</li>
-		</ul>
-		<img src="/banner.png" class="banner">
-    </header>
+    <%- include('header') %>
     <main>
 		<!--main content-->
 		<section class="main-content" id="main-content">
