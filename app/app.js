@@ -121,21 +121,19 @@ app.get('/submit', function (req, res) {
   fetchAndRender(req, res, 'filmSubmit.ejs', 'Đăng tải phim - Con hub');
 });
 app.get("/register", (req, res) => {
+  if(req.session.user) {
+    return res.redirect('/home'); // Redirect to home if already logged in
+  }
   fetchAndRender(req, res, 'register.ejs', 'Đăng kí - Con hub');
 });
 app.get("/login", (req, res) => {
+  if(req.session.user) {
+    return res.redirect('/home'); // Redirect to home if already logged in
+  }
   fetchAndRender(req, res, 'login.ejs', 'Đăng nhập - Con hub');
 });
 app.get('/favourite', async (req, res) => {
-  if (!req.session.user) {
-      // Send an alert and redirect to the login page
-      return res.send(`
-          <script>
-              alert('Bạn cần đăng nhập để truy cập trang này.');
-              window.location.href = '/login';
-          </script>
-      `);
-  }
+  checkLogin(req, res); // Check if user is logged in
 
   try {
     fetchAndRender(req, res, 'favourite.ejs', 'Phim yêu thích - Con hub');
@@ -145,15 +143,7 @@ app.get('/favourite', async (req, res) => {
   }
 });
 app.get('/favourite/*', async (req, res) => {
-  if (!req.session.user) {
-      // Send an alert and redirect to the login page
-      return res.send(`
-          <script>
-              alert('Bạn cần đăng nhập để truy cập trang này.');
-              window.location.href = '/login';
-          </script>
-      `);
-  }
+  checkLogin(req, res); // Check if user is logged in
 
   try {
     fetchAndRender(req, res, 'favourite.ejs', 'Phim yêu thích - Con hub');
@@ -165,23 +155,6 @@ app.get('/favourite/*', async (req, res) => {
 app.get("/test", (req, res) => {
   fetchAndRender(req, res, 'test.ejs', 'test - Con hub');
 });
-// app.get('/user', async (req, res) => {
-//   if (!req.session.user) {
-//       // Send an alert and redirect to the login page
-//       return res.send(`
-//           <script>
-//               alert('Bạn cần đăng nhập để truy cập trang này.');
-//               window.location.href = '/login';
-//           </script>
-//       `);
-//   }
-
-//   try {
-//     fetchAndRender(req, res, 'userInformation.ejs', 'Người dùng - Con hub');
-//   } catch (err) {
-//       console.error('Error fetching user:', err);
-//       res.status(500).send('Error fetching user');
-//   }
 // });
 app.get('/user', async (req, res) => {
   fetchAndRender(req, res, 'userInformation.ejs', 'Người dùng - Con hub');
@@ -217,15 +190,7 @@ app.get('/user/:name', async (req, res) => {
   }
 });
 app.get('/form', (req, res) => {
-  if (!req.session.user) {
-      // Redirect to login if the user is not logged in
-      return res.send(`
-          <script>
-              alert('You must be logged in to upload a film.');
-              window.location.href = '/login';
-          </script>
-      `);
-  }
+  checkLogin(req, res); // Check if user is logged in
 
   // Render the upload film page
   fetchAndRender(req, res, 'form.ejs', 'Đăng tải phim - Con hub');
@@ -278,6 +243,28 @@ function addData(name, description, author, url, source, verified, download, tim
     }
     console.log("a");
   });
+}
+//check login
+function checkLogin(req, res) {
+  if (!req.session.user) {
+    // Send an alert and redirect to the login page
+    return res.send(`
+        <script>
+            alert('Bạn cần đăng nhập để truy cập trang này.');
+            window.location.href = '/login';
+        </script>
+    `);
+  }
+}
+function checkAdmin(req, res) {
+  if (!req.session.user || req.session.user.mod !== true) {
+    return res.send(`
+        <script>
+            alert('Cần có quyền admin để xem được trang này');
+            window.location.href = '/home';
+        </script>
+    `);
+}
 }
 //Register
 app.post("/register", async (req, res) => {
@@ -334,7 +321,7 @@ app.post("/fav", async (req, res) => {
   const { name, password } = req.body;
   const {fav_film} = req.body;
   try {
-    if(req.session.user)
+    if(req.session.user && fav_film)
     {
       const result = await client.query('SELECT * FROM users WHERE id = $1', [req.session.user.id]);
       let favourite = result.rows[0].favourite;
@@ -507,15 +494,7 @@ app.post('/submit', uploadFields, async (req, res) => {
 });
 //test
 app.get('/user-uploads', async (req, res) => {
-  if (!req.session.user) {
-      // Send an alert and redirect to the login page
-      return res.send(`
-          <script>
-              alert('Bạn cần đăng nhập để truy cập trang này.');
-              window.location.href = '/login';
-          </script>
-      `);
-  }
+  checkLogin(req, res); // Check if user is logged in
 
   try {
       fetchAndRender(req, res, 'userUploads.ejs', 'Your Uploaded Films - Con hub');
@@ -529,12 +508,29 @@ app.post('/delete-film', async (req, res) => {
   const { filmId, reason } = req.body;
 
   try {
+    const filmResult = await client.query('SELECT src FROM films WHERE id = $1', [filmId]);
+        const film = filmResult.rows[0];
+
+        if (!film) {
+            return res.status(404).send('Film not found');
+        }
+
+        // Extract the file ID from the Google Drive link
+        const fileId = film.src.match(/[-\w]{25,}/); // Extract the file ID from the Google Drive URL
+
+        if (fileId) {
+            // Authorize Google Drive API
+            const authClient = await authorize();
+
+            // Delete the file from Google Drive
+            const drive = google.drive({ version: 'v3', auth: authClient });
+            await drive.files.delete({ fileId: fileId[0] });
+        }
       // Update the film status to "Deleted" and set the reason
       await client.query(
           'UPDATE films SET verified = $1, note = $2 WHERE id = $3',
           ['deleted', filter(reason), filmId]
       );
-
       // Redirect back to the previous page
       res.redirect(req.get('referer'));
   } catch (err) {
@@ -544,14 +540,7 @@ app.post('/delete-film', async (req, res) => {
 });
 //verify film
 app.get('/admin/verify-films', async (req, res) => {
-  if (!req.session.user || req.session.user.mod !== true) {
-      return res.send(`
-          <script>
-              alert('Cần có quyền admin để xem được trang này');
-              window.location.href = '/home';
-          </script>
-      `);
-  }
+  checkAdmin(req, res); // Check if user is logged in and has admin privileges
 
   try {
       fetchAndRender(req, res, 'verifyFilms.ejs', 'Admin - Verify Films');
@@ -565,7 +554,7 @@ app.post('/verify-film', async (req, res) => {
   const { filmId } = req.body;
 
   if (!req.session.user || req.session.user.mod !== true) {
-      return res.status(403).send('You are not authorized to verify films.');
+      return res.status(403).send('Bạn cần có thẩm quyền để kiểm duyệt phim.');
   }
 
   try {
@@ -583,23 +572,38 @@ app.post('/verify-film', async (req, res) => {
 // Render the update user page
 app.get('/userUpdate', (req, res) => {
   if (!req.session.user) {
-    return res.send(`
-      <script>
-          alert('Bạn cần đăng nhập để truy cập trang này.');
-          window.location.href = '/login';
-      </script>
-  `);
+    res.redirect('/home');
   }
-
-  res.render('userUpdate.ejs', {
-    title: 'Thông tin tài khoản - Con hub',	
-    url: req.originalUrl, // Use req instead of require
-    user_name: req.session.user ? req.session.user.name : "",
-    user_favourite: req.session.user ? req.session.user.favourite : "",
-    unfilter: unfilter,
-    user_mod: req.session.user ? req.session.user.mod : false,
-    user: req.session.user, // Pass the current user data to the view
-  });
+  else{
+    res.render('userUpdate.ejs', {
+      title: 'Thông tin tài khoản - Con hub',	
+      url: req.originalUrl, // Use req instead of require
+      user_name: req.session.user ? req.session.user.name : "",
+      user_favourite: req.session.user ? req.session.user.favourite : "",
+      unfilter: unfilter,
+      user_mod: req.session.user ? req.session.user.mod : false,
+      user: req.session.user, // Pass the current user data to the view
+    });
+  }
+  
+});
+app.get('/passwordUpdate', (req, res) => {
+  if (!req.session.user) {
+    res.redirect('/home');
+  }
+  else{
+    res.render('passwordUpdate.ejs', {
+      title: 'Cập nhật mật khẩu - Con hub',	
+      errorMessage: "",
+      url: req.originalUrl, // Use req instead of require
+      user_name: req.session.user ? req.session.user.name : "",
+      user_favourite: req.session.user ? req.session.user.favourite : "",
+      unfilter: unfilter,
+      user_mod: req.session.user ? req.session.user.mod : false,
+      user: req.session.user, // Pass the current user data to the view
+    });
+  }
+  
 });
 
 // Handle form submission
@@ -641,5 +645,38 @@ app.post('/updateInfor', upload.single('avatar'), async (req, res) => {
   } catch (err) {
       console.error('Error updating user:', err);
       res.status(500).send('Error updating user');
+  }
+});
+app.post('/updatePassword', async (req, res) => {
+  const { currentPassword, newPassword, confirmPassword } = req.body;
+
+  try {
+      // Fetch the current user from the database
+      const userResult = await client.query('SELECT * FROM users WHERE id = $1', [req.session.user.id]);
+      const user = userResult.rows[0];
+
+      // Check if the current password is correct
+      if (user.password != currentPassword) { 
+          return fetchAndRender(req, res, 'passwordUpdate.ejs', 'Cập nhật mật khẩu - Con hub', "Mật khẩu hiện tại không đúng!");
+      }
+
+      // Check if the new password is the same as the old password
+      if (currentPassword == newPassword) {
+          return fetchAndRender(req, res, 'passwordUpdate.ejs', 'Cập nhật mật khẩu - Con hub', "Mật khẩu mới không được giống mật khẩu cũ!");
+      }
+
+      // Check if the new password matches the confirm password
+      if (newPassword != confirmPassword) {
+          return fetchAndRender(req, res, 'passwordUpdate.ejs', 'Cập nhật mật khẩu - Con hub', "Mật khẩu xác nhận không khớp!");
+      }
+
+      // Update the password in the database
+      await client.query('UPDATE users SET password = $1 WHERE id = $2', [newPassword, req.session.user.id]);
+
+      // Render success message
+      return fetchAndRender(req, res, 'passwordUpdate.ejs', 'Cập nhật mật khẩu - Con hub', "Đổi mật khẩu thành công!");
+  } catch (err) {
+      console.error('Error updating password:', err);
+      res.status(500).send('Lỗi khi đổi mật khẩu.');
   }
 });

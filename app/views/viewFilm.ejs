@@ -7,6 +7,24 @@
 	<title><%= title %></title>
 	<link rel="stylesheet" href="/styles.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+	<style>
+		.delete-form-row {
+		display: flex;
+		align-items: left;
+		gap: 10px; /* Space between the input and button */
+		margin-bottom: 10px; /* Space below the row */
+	}
+
+	.reason-input {
+		flex: 1; /* Allow the textarea to take up available space */
+		padding: 5px;
+	}
+	.delete-btn {
+		flex: 2;
+		padding: 5px;
+		margin: 0;
+	}
+	</style>
 </head>
 
 <body onload="loadFilm('<%= url %>', `<%=unfilter(JSON.stringify(dbData))%>`, '<%= user_favourite %>')">
@@ -36,6 +54,22 @@
 			<p class="description" id="film-description"></p>
 			<!-- Download Button -->
 			<a id="download-btn" href="#" class="download-btn" download><b>Tải phim</b></a>
+			<% if (user_mod) { %>
+				<!-- Small Button to Show Delete Form -->
+				<button id="check-admin-btn" class="check-admin-btn download-btn" onclick="toggleDeleteForm()">Xóa phim</button>
+			
+				<!-- Delete Form -->
+				<form id="delete-form" action="/delete-film" method="POST" style="margin-top: 10px; display: none;" onsubmit="return confirm('Bạn có chắc muốn xóa phim này?');">
+					<input type="hidden" name="filmId" value="<%= url.split('watch/')[1]%>">
+					<div class="delete-form-row">
+						<textarea name="reason" placeholder="Lí do xóa" class="reason-input" required></textarea>
+						<button type="submit" class="delete-btn">Xóa phim</button>
+						<div id="loading">
+							<img src="/loading.gif" alt="Loading..." style="height: 50%;">
+						</div>
+					</div>
+				</form>
+			<% } %>
 		</div>
 		<hr>
 	</main>
