@@ -1,111 +1,111 @@
 let maxMainContentLength = 8; // How many content to show in main
 let mainContentShow = maxMainContentLength; // Show content to
 let mainContentIndex = 0; // Show content from
-let subContentShow = 6; // How many content to show in sub
+let subContentShow = 8; // How many content to show in sub
 let subContentIndex = 0; // Sub content start
 // Storage all film
 var contentList = [
-		{
-			img: 'https://i.ytimg.com/vi/C7OQHIpDlvA/maxresdefault.jpg',
-			name: 'The Wait',
-			href: '/watch/1',
-			description: `"The Wait" (Written & Directed by Nolt Vutthisak) tells the story of a lonely drummer (Kritthee Visitkitjakarn) during the self-distancing period in 2020, who has grown frustrated with the absence of his band. Killing time, the self-taught drummer must do something by his own imagination.`,
-			src: 'https://www.youtube.com/embed/C7OQHIpDlvA?si=DCA_qpwjCrA8kuhk',
-			author: `Nolt Vutthisak`,
-			year: 2020,
-		},
-		{
-			img: 'https://i.ytimg.com/vi/OrOYvVf6tIM/maxresdefault.jpg',
-			name: 'Other Side of the Box',
-			href: '/watch/2',
-			description: `More About "Other Side of the Box" : 
-			On a normal Winter night Ben and Rachel are called upon by their estranged friend Shawn, who has brought a gift. Things quickly escalate when they open the box and realize something is trying to get out.`,
-			src: 'https://www.youtube.com/embed/OrOYvVf6tIM?si=DCA_qpwjCrA8kuhk',
-			author: `Caleb J. Phillips`,
-			year: 2020,
-		},
-		{
-			img: 'https://i.ytimg.com/vi/mhazCS14Tas/maxresdefault.jpg',
-			name: 'THE CHAIR',
-			href: '/watch/3',
-			description: `After Reese (Anthony Pavone) brings home an antique chair, a series of horrific events follow, leading him to question if it's a malevolent spirit the chair possesses or the darkness inside his own mind.`,
-			src: 'https://www.youtube.com/embed/mhazCS14Tas?si=DCA_qpwjCrA8kuhk',
-			author: `Curry Barker`,
-			year: 2023,
-		},
-		{
-			img: 'https://i.ytimg.com/vi/BI9fKfX5V68/maxresdefault.jpg',
-			name: 'Portrait of God',
-			href: '/watch/4',
-			description: `A religious girl prepares a presentation about a painting titled "Portrait of God". What she sees challenges her beliefs.`,
-			src: 'https://www.youtube.com/embed/BI9fKfX5V68?si=DCA_qpwjCrA8kuhk',
-			author: `Dylan Clark`,
-			year: 2022,
-		},
-		{
-			img: 'https://i.ytimg.com/vi/IyhoT3smJEQ/maxresdefault.jpg',
-			name: 'The Kid and the Camera',
-			href: '/watch/5',
-			description: `MA young boy named Cailen with a broken camera is visited by a sleep fairy called the Cipsneed, but he's never heard of a sleep fairy. Enjoy!`,
-			src: 'https://www.youtube.com/embed/IyhoT3smJEQ?si=DCA_qpwjCrA8kuhk',
-			author: `Braiden Ortiz`,
-			year: 2023,
-		},
-		{
-			img: 'https://i.ytimg.com/vi/thpF81-wrMs/maxresdefault.jpg',
-			name: 'The Loop',
-			href: '/watch/6',
-			description: ``,
-			src: 'https://www.youtube.com/embed/thpF81-wrMs?si=DCA_qpwjCrA8kuhk',
-			author: `Sadiel Gomez`,
-			year: 2024,
-		},
-		/*test*/
-		{
-			img: 'https://i.ytimg.com/vi/C7OQHIpDlvA/maxresdefault.jpg',
-			name: 'The Wait',
-			href: '/watch/1',
-			description: `"The Wait" (Written & Directed by Nolt Vutthisak) tells the story of a lonely drummer (Kritthee Visitkitjakarn) during the self-distancing period in 2020, who has grown frustrated with the absence of his band. Killing time, the self-taught drummer must do something by his own imagination.`,
-			src: 'https://www.youtube.com/embed/C7OQHIpDlvA?si=DCA_qpwjCrA8kuhk',
-			author: `Nolt Vutthisak`,
-			year: 2020,
-		},
-		{
-			img: 'https://i.ytimg.com/vi/C7OQHIpDlvA/maxresdefault.jpg',
-			name: 'The Wait',
-			href: '/watch/1',
-			description: `"The Wait" (Written & Directed by Nolt Vutthisak) tells the story of a lonely drummer (Kritthee Visitkitjakarn) during the self-distancing period in 2020, who has grown frustrated with the absence of his band. Killing time, the self-taught drummer must do something by his own imagination.`,
-			src: 'https://www.youtube.com/embed/C7OQHIpDlvA?si=DCA_qpwjCrA8kuhk',
-			author: `Nolt Vutthisak`,
-			year: 2020,
-		},
-		{
-			img: 'https://i.ytimg.com/vi/C7OQHIpDlvA/maxresdefault.jpg',
-			name: 'The Wait',
-			href: '/watch/1',
-			description: `"The Wait" (Written & Directed by Nolt Vutthisak) tells the story of a lonely drummer (Kritthee Visitkitjakarn) during the self-distancing period in 2020, who has grown frustrated with the absence of his band. Killing time, the self-taught drummer must do something by his own imagination.`,
-			src: 'https://www.youtube.com/embed/C7OQHIpDlvA?si=DCA_qpwjCrA8kuhk',
-			author: `Nolt Vutthisak`,
-			year: 2020,
-		},
-		{
-			img: 'https://i.ytimg.com/vi/C7OQHIpDlvA/maxresdefault.jpg',
-			name: 'The Wait',
-			href: '/watch/1',
-			description: `"The Wait" (Written & Directed by Nolt Vutthisak) tells the story of a lonely drummer (Kritthee Visitkitjakarn) during the self-distancing period in 2020, who has grown frustrated with the absence of his band. Killing time, the self-taught drummer must do something by his own imagination.`,
-			src: 'https://www.youtube.com/embed/C7OQHIpDlvA?si=DCA_qpwjCrA8kuhk',
-			author: `Nolt Vutthisak`,
-			year: 2020,
-		},
-		{
-			img: 'https://i.ytimg.com/vi/C7OQHIpDlvA/maxresdefault.jpg',
-			name: 'The Wait',
-			href: '/watch/1',
-			description: `"The Wait" (Written & Directed by Nolt Vutthisak) tells the story of a lonely drummer (Kritthee Visitkitjakarn) during the self-distancing period in 2020, who has grown frustrated with the absence of his band. Killing time, the self-taught drummer must do something by his own imagination.`,
-			src: 'https://www.youtube.com/embed/C7OQHIpDlvA?si=DCA_qpwjCrA8kuhk',
-			author: `Nolt Vutthisak`,
-			year: 2020,
-		},
+		// {
+		// 	img: 'https://i.ytimg.com/vi/C7OQHIpDlvA/maxresdefault.jpg',
+		// 	name: 'The Wait',
+		// 	href: '/watch/1',
+		// 	description: `"The Wait" (Written & Directed by Nolt Vutthisak) tells the story of a lonely drummer (Kritthee Visitkitjakarn) during the self-distancing period in 2020, who has grown frustrated with the absence of his band. Killing time, the self-taught drummer must do something by his own imagination.`,
+		// 	src: 'https://www.youtube.com/embed/C7OQHIpDlvA?si=DCA_qpwjCrA8kuhk',
+		// 	author: `Nolt Vutthisak`,
+		// 	year: 2020,
+		// },
+		// {
+		// 	img: 'https://i.ytimg.com/vi/OrOYvVf6tIM/maxresdefault.jpg',
+		// 	name: 'Other Side of the Box',
+		// 	href: '/watch/2',
+		// 	description: `More About "Other Side of the Box" : 
+		// 	On a normal Winter night Ben and Rachel are called upon by their estranged friend Shawn, who has brought a gift. Things quickly escalate when they open the box and realize something is trying to get out.`,
+		// 	src: 'https://www.youtube.com/embed/OrOYvVf6tIM?si=DCA_qpwjCrA8kuhk',
+		// 	author: `Caleb J. Phillips`,
+		// 	year: 2020,
+		// },
+		// {
+		// 	img: 'https://i.ytimg.com/vi/mhazCS14Tas/maxresdefault.jpg',
+		// 	name: 'THE CHAIR',
+		// 	href: '/watch/3',
+		// 	description: `After Reese (Anthony Pavone) brings home an antique chair, a series of horrific events follow, leading him to question if it's a malevolent spirit the chair possesses or the darkness inside his own mind.`,
+		// 	src: 'https://www.youtube.com/embed/mhazCS14Tas?si=DCA_qpwjCrA8kuhk',
+		// 	author: `Curry Barker`,
+		// 	year: 2023,
+		// },
+		// {
+		// 	img: 'https://i.ytimg.com/vi/BI9fKfX5V68/maxresdefault.jpg',
+		// 	name: 'Portrait of God',
+		// 	href: '/watch/4',
+		// 	description: `A religious girl prepares a presentation about a painting titled "Portrait of God". What she sees challenges her beliefs.`,
+		// 	src: 'https://www.youtube.com/embed/BI9fKfX5V68?si=DCA_qpwjCrA8kuhk',
+		// 	author: `Dylan Clark`,
+		// 	year: 2022,
+		// },
+		// {
+		// 	img: 'https://i.ytimg.com/vi/IyhoT3smJEQ/maxresdefault.jpg',
+		// 	name: 'The Kid and the Camera',
+		// 	href: '/watch/5',
+		// 	description: `MA young boy named Cailen with a broken camera is visited by a sleep fairy called the Cipsneed, but he's never heard of a sleep fairy. Enjoy!`,
+		// 	src: 'https://www.youtube.com/embed/IyhoT3smJEQ?si=DCA_qpwjCrA8kuhk',
+		// 	author: `Braiden Ortiz`,
+		// 	year: 2023,
+		// },
+		// {
+		// 	img: 'https://i.ytimg.com/vi/thpF81-wrMs/maxresdefault.jpg',
+		// 	name: 'The Loop',
+		// 	href: '/watch/6',
+		// 	description: ``,
+		// 	src: 'https://www.youtube.com/embed/thpF81-wrMs?si=DCA_qpwjCrA8kuhk',
+		// 	author: `Sadiel Gomez`,
+		// 	year: 2024,
+		// },
+		// /*test*/
+		// {
+		// 	img: 'https://i.ytimg.com/vi/C7OQHIpDlvA/maxresdefault.jpg',
+		// 	name: 'The Wait',
+		// 	href: '/watch/1',
+		// 	description: `"The Wait" (Written & Directed by Nolt Vutthisak) tells the story of a lonely drummer (Kritthee Visitkitjakarn) during the self-distancing period in 2020, who has grown frustrated with the absence of his band. Killing time, the self-taught drummer must do something by his own imagination.`,
+		// 	src: 'https://www.youtube.com/embed/C7OQHIpDlvA?si=DCA_qpwjCrA8kuhk',
+		// 	author: `Nolt Vutthisak`,
+		// 	year: 2020,
+		// },
+		// {
+		// 	img: 'https://i.ytimg.com/vi/C7OQHIpDlvA/maxresdefault.jpg',
+		// 	name: 'The Wait',
+		// 	href: '/watch/1',
+		// 	description: `"The Wait" (Written & Directed by Nolt Vutthisak) tells the story of a lonely drummer (Kritthee Visitkitjakarn) during the self-distancing period in 2020, who has grown frustrated with the absence of his band. Killing time, the self-taught drummer must do something by his own imagination.`,
+		// 	src: 'https://www.youtube.com/embed/C7OQHIpDlvA?si=DCA_qpwjCrA8kuhk',
+		// 	author: `Nolt Vutthisak`,
+		// 	year: 2020,
+		// },
+		// {
+		// 	img: 'https://i.ytimg.com/vi/C7OQHIpDlvA/maxresdefault.jpg',
+		// 	name: 'The Wait',
+		// 	href: '/watch/1',
+		// 	description: `"The Wait" (Written & Directed by Nolt Vutthisak) tells the story of a lonely drummer (Kritthee Visitkitjakarn) during the self-distancing period in 2020, who has grown frustrated with the absence of his band. Killing time, the self-taught drummer must do something by his own imagination.`,
+		// 	src: 'https://www.youtube.com/embed/C7OQHIpDlvA?si=DCA_qpwjCrA8kuhk',
+		// 	author: `Nolt Vutthisak`,
+		// 	year: 2020,
+		// },
+		// {
+		// 	img: 'https://i.ytimg.com/vi/C7OQHIpDlvA/maxresdefault.jpg',
+		// 	name: 'The Wait',
+		// 	href: '/watch/1',
+		// 	description: `"The Wait" (Written & Directed by Nolt Vutthisak) tells the story of a lonely drummer (Kritthee Visitkitjakarn) during the self-distancing period in 2020, who has grown frustrated with the absence of his band. Killing time, the self-taught drummer must do something by his own imagination.`,
+		// 	src: 'https://www.youtube.com/embed/C7OQHIpDlvA?si=DCA_qpwjCrA8kuhk',
+		// 	author: `Nolt Vutthisak`,
+		// 	year: 2020,
+		// },
+		// {
+		// 	img: 'https://i.ytimg.com/vi/C7OQHIpDlvA/maxresdefault.jpg',
+		// 	name: 'The Wait',
+		// 	href: '/watch/1',
+		// 	description: `"The Wait" (Written & Directed by Nolt Vutthisak) tells the story of a lonely drummer (Kritthee Visitkitjakarn) during the self-distancing period in 2020, who has grown frustrated with the absence of his band. Killing time, the self-taught drummer must do something by his own imagination.`,
+		// 	src: 'https://www.youtube.com/embed/C7OQHIpDlvA?si=DCA_qpwjCrA8kuhk',
+		// 	author: `Nolt Vutthisak`,
+		// 	year: 2020,
+		// },
 	];
 // Store main content film
 var mainContentList = [
@@ -356,7 +356,7 @@ function loadFilm(url, dbData, user_favourite) {
 
     // load film base on id
     for (var content of contentList) {
-        if (content.id == filmId) {
+        if (content.id == filmId && content.verified !== "deleted") {
             // Set video source
             video.src = content.src;
             // Set download link
@@ -647,3 +647,28 @@ function loadPage()
 	checkLogin();
     loadSearchContent();
 }
+function toggleDeleteForm() {
+	const deleteForm = document.getElementById('delete-form');
+	if (deleteForm.style.display === 'none' || deleteForm.style.display === '') {
+		deleteForm.style.display = 'block';
+	} else {
+		deleteForm.style.display = 'none';
+	}
+}
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('film-upload-form');
+	const deleteForm = document.getElementById('delete-form');
+
+	if (form) {
+    form.addEventListener('submit', () => {
+			document.getElementById('loading').style.display = 'flex';
+			document.getElementById('loading').style.display = 'flex';
+    });
+	}
+	if (deleteForm) {
+		deleteForm.addEventListener('submit', () => {
+			document.getElementById('loading').style.display = 'flex';
+			document.getElementById('loading').style.display = 'flex';
+		});
+	}
+});

@@ -139,13 +139,18 @@
                     </div>
                     <div class="col"><%= new Date(film.time).toLocaleString('vi-VN', { dateStyle: 'medium', timeStyle: 'short' }) %></div>
                     <div class="col">
-                        <div class="action-buttons">
-                            <form action="/delete-film" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this film?');">
-                                <input type="hidden" name="filmId" value="<%= film.id %>">
-                                <textarea name="reason" placeholder="Lí do xóa" class="reason-input" required></textarea>
-                                <button type="submit" class="reject-button">Xóa</button>
-                            </form>
-                        </div>
+                        <% if (film.verified !== 'deleted') { %>
+                            <div class="action-buttons">
+                                <form id="delete-form" action="/delete-film" method="POST" style="display: inline;" onsubmit="return confirm('Bạn có chắc muốn xóa phim này?');">
+                                    <input type="hidden" name="filmId" value="<%= film.id %>">
+                                    <textarea name="reason" placeholder="Lí do xóa" class="reason-input" required></textarea>
+                                    <button type="submit" class="reject-button">Xóa</button>
+                                    <div id="loading">
+                                        <img src="/loading.gif" alt="Loading..." style="height: 50%;">
+                                    </div>
+                                </form>
+                            </div>
+                        <% } %>
                     </div>
                 </div>
             <% }) %>
