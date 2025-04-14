@@ -85,7 +85,8 @@ function fetchAndRender(req, res, web, title, errMess) {
         unverifiedFilms: req.session.user ? unverifiedFilms : "",
         userUploads: req.session.user ? userUploads : "",
         errorMessage: errMess ? errMess : "",
-        user_mod: req.session.user ? req.session.user.mod : false
+        user_mod: req.session.user ? req.session.user.mod : false,
+        user: req.session.user ? req.session.user : null, // Pass the current user data to the view
       });
     } else {
       console.log(err.message);
@@ -580,6 +581,7 @@ app.get('/userUpdate', (req, res) => {
       url: req.originalUrl, // Use req instead of require
       user_name: req.session.user ? req.session.user.name : "",
       user_favourite: req.session.user ? req.session.user.favourite : "",
+      errorMessage: "",
       unfilter: unfilter,
       user_mod: req.session.user ? req.session.user.mod : false,
       user: req.session.user, // Pass the current user data to the view
@@ -612,6 +614,16 @@ app.post('/updateInfor', upload.single('avatar'), async (req, res) => {
   let avatar = req.session.user.avatar; // Default to the current avatar
 
   try {
+    // Check if the new username already exists in the database
+    const usernameCheck = await client.query(
+      'SELECT * FROM users WHERE name = $1 AND id != $2',
+      [name, req.session.user.id]
+    );
+
+    if (usernameCheck.rows.length > 0) {
+        // If the username already exists, return an error message
+        return fetchAndRender(req, res, 'userUpdate.ejs', 'Thông tin tài khoản - Con hub', "Tên người dùng đã tồn tại!");
+    }
       if (req.file) {
           // Authorize Google Drive API
           const authClient = await authorize();

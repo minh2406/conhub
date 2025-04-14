@@ -90,6 +90,7 @@
     <%- include('header') %>
     <main class="update-user-page">
         <h1>Cập nhật thông tin cá nhân</h1>
+        <p style="color: red;"> <%= errorMessage%></p>
         <form action="/updateInfor" method="POST" enctype="multipart/form-data" class="update-user-form">
             <!-- Avatar -->
             <label for="avatar">Ảnh đại diện:</label>
