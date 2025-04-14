@@ -124,7 +124,7 @@
                     <div class="col title-col">
                         <a href="/watch/<%= film.id %>"><%= film.name %></a>
                     </div>
-                    <div class="col"><%= film.description %></div>
+                    <div class="col"><%= unfilter(film.description) %></div>
                     <div class="col"><%= film.author %></div>
                     <div class="col">
                         <% if (film.verified === 'true') { %>
