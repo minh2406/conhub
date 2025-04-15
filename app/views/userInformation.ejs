@@ -70,7 +70,43 @@
 	color: #fff;
 	margin: 0;
   }
+  /* Prevent overflow for the username */
+.username {
+    margin: 0;
+    color: #FF8A00;
+    font-size: 24px;
+    white-space: nowrap; /* Prevent text from wrapping */
+    overflow: hidden; /* Hide overflowing text */
+    text-overflow: ellipsis; /* Add "..." to indicate truncated text */
+}
 
+/* Prevent overflow for the description */
+.description {
+    margin: 10px 0 0;
+    color: #ccc;
+    white-space: nowrap; /* Prevent text from wrapping */
+    overflow: hidden; /* Hide overflowing text */
+    text-overflow: ellipsis; /* Add "..." to indicate truncated text */
+}
+
+/* Prevent overflow for video titles */
+.video-card h3 {
+    font-size: 16px;
+    color: #fff;
+    margin: 0;
+    white-space: nowrap; /* Prevent text from wrapping */
+    overflow: hidden; /* Hide overflowing text */
+    text-overflow: ellipsis; /* Add "..." to indicate truncated text */
+}
+
+/* Prevent overflow for video author info */
+.video-card .info {
+    font-size: 14px;
+    color: #aaa;
+    white-space: nowrap; /* Prevent text from wrapping */
+    overflow: hidden; /* Hide overflowing text */
+    text-overflow: ellipsis; /* Add "..." to indicate truncated text */
+}
   .video-card:hover {
 	transform: translateY(-5px);
   }
