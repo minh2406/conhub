@@ -161,7 +161,7 @@ app.get('/user', async (req, res) => {
   fetchAndRender(req, res, 'userInformation.ejs', 'Người dùng - Con hub');
 });
 app.get('/user/:name', async (req, res) => {
-  const username = req.params.name;
+  const username = decodeURIComponent(req.params.name);
 
   try {
       // Query the database for the user
