@@ -359,8 +359,8 @@ function loadFilm(url, dbData, user_favourite) {
         if (content.id == filmId && content.verified !== "deleted") {
             // Set video source
             video.src = content.src;
-            // Set download link
-            // downloadBtn.onclick = `location.href = "content.download"`;
+            // Set download l
+            downloadBtn.href = content.download;
             // Set upload time
             uploadTime.innerText = new Date(content.time).toLocaleString('vi-VN', { dateStyle: 'medium', timeStyle: 'short' });
             // Update details
